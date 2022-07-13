@@ -1,0 +1,2 @@
+bitbag_shopware_app_system:
+  resource: '@BitBagShopwareAppSystemBundle/Resources/config/routes.yaml'
