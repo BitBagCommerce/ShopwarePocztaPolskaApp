@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/Framework/App/Manifest/Schema/manifest-1.0.xsd">
+    <meta>
+        <name>BitBagShopwarePocztaPolskaApp</name>
+        <label>Polish Post</label>
+        <label lang="pl-PL">Poczta Polska</label>
+        <description>BitBag Shopware app for Polish Post</description>
+        <description lang="pl-PL">Aplikacja umożliwiająca tworzenie przesyłek z Pocztą Polską dla platformy Shopware</description>
+        <author>BitBag</author>
+        <copyright>(c) by BitBag</copyright>
+        <version>1.0.0</version>
+        <license>MIT</license>
+    </meta>
+
+    <setup>
+        <registrationUrl>http://example-app2/app/registration</registrationUrl>
+        <secret>myAppSecret</secret>
+    </setup>
+
+    <permissions>
+        <read>shipping_method</read>
+        <create>shipping_method</create>
+        <update>shipping_method</update>
+        <create>shipping_method_price</create>
+
+        <read>delivery_time</read>
+
+        <read>order</read>
+        <read>order_address</read>
+        <read>order_line_item</read>
+        <read>order_transaction</read>
+        <read>order_payment_method</read>
+        <read>order_delivery</read>
+        <update>order_delivery</update>
+
+        <read>product</read>
+
+        <read>rule</read>
+        <create>rule</create>
+        <create>rule_condition</create>
+
+        <read>payment_method</read>
+
+        <read>sales_channel</read>
+    </permissions>
+
+    <webhooks>
+        <webhook name="appLifecycleDeleted" url="http://example-app2/app/lifecycle/deleted" event="app.deleted" />
+        <webhook name="appLifecycleActivated" url="http://example-app2/app/lifecycle/activated" event="app.activated" />
+    </webhooks>
+</manifest>
