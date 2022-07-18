@@ -26,9 +26,9 @@ interface ConfigInterface
 
     public function setApiEnvironment(string $apiEnvironment): void;
 
-    public function getOfficeOrigin(): string;
+    public function getoriginOffice(): string;
 
-    public function setOfficeOrigin(string $officeOrigin): void;
+    public function setoriginOffice(string $originOffice): void;
 
     public function getShop(): ShopInterface;
 

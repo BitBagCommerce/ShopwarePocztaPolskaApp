@@ -52,17 +52,13 @@ final class ConfigurationModuleController extends AbstractController
 
     public function __invoke(Request $request): Response
     {
-        $session = $request->getSession();
         $shopId = $request->query->get('shop-id', '');
-
         $shop = $this->shopRepository->find($shopId);
-
         if (null === $shop) {
             throw new ShopNotFoundException($shopId);
         }
 
         $context = $this->contextFactory->create($shop);
-
         if (null === $context) {
             throw new UnauthorizedHttpException('');
         }
@@ -77,17 +73,16 @@ final class ConfigurationModuleController extends AbstractController
 
         $form = $this->createForm(ConfigType::class, $config, [
             'salesChannels' => $this->getSalesChannelsForForm($context),
-            'officeOrigins' => $this->getOfficeOrigins(),
+            'originOffices' => $this->getoriginOffices(),
         ]);
-
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $config->setShop($shop);
 
             $this->entityManager->persist($config);
             $this->entityManager->flush();
 
+            $session = $request->getSession();
             $session->getFlashBag()->add('success', $this->translator->trans('bitbag.shopware_poczta_polska_app.config.saved'));
         }
 
@@ -115,7 +110,7 @@ final class ConfigurationModuleController extends AbstractController
         );
     }
 
-    private function getOfficeOrigins(): array
+    private function getoriginOffices(): array
     {
         return [
             'UP Gdańsk 48' => 239467,

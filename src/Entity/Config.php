@@ -19,7 +19,7 @@ class Config implements ConfigInterface
 
     protected string $apiEnvironment;
 
-    protected string $officeOrigin;
+    protected string $originOffice;
 
     protected string $salesChannelId;
 
@@ -60,14 +60,14 @@ class Config implements ConfigInterface
         $this->apiEnvironment = $apiEnvironment;
     }
 
-    public function getOfficeOrigin(): string
+    public function getoriginOffice(): string
     {
-        return $this->officeOrigin;
+        return $this->originOffice;
     }
 
-    public function setOfficeOrigin(string $officeOrigin): void
+    public function setoriginOffice(string $originOffice): void
     {
-        $this->officeOrigin = $officeOrigin;
+        $this->originOffice = $originOffice;
     }
 
     public function getSalesChannelId(): string

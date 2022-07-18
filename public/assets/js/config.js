@@ -2,7 +2,7 @@ const salesChannelIdSelectEl = document.getElementById('salesChannelId');
 const apiLoginEl = document.getElementById('apiLogin');
 const apiPasswordEl = document.getElementById('apiPassword');
 const apiEnvironmentEl = document.getElementById('apiEnvironment');
-const officeOriginEl = document.getElementById('officeOrigin');
+const originOfficeEl = document.getElementById('originOffice');
 
 salesChannelIdSelectEl.addEventListener('change', (e) => {
     const value = e.target.value;
@@ -30,7 +30,7 @@ salesChannelIdSelectEl.addEventListener('change', (e) => {
                 apiLoginEl.value = response.apiLogin ?? '';
                 apiPasswordEl.value = response.apiPassword ?? '';
                 apiEnvironmentEl.value = response.apiEnvironment ?? '';
-                officeOriginEl.value = response.officeOrigin ?? '';
+                originOfficeEl.value = response.originOffice ?? '';
             });
         });
 });

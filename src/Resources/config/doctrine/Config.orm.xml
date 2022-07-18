@@ -15,7 +15,7 @@
 
         <field name="apiEnvironment" column="api_environment" type="string" />
 
-        <field name="officeOrigin" column="office_origin" type="string" />
+        <field name="originOffice" column="origin_office" type="string" />
 
         <field name="salesChannelId" column="sales_channel_id" type="string" />
 

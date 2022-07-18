@@ -38,10 +38,10 @@ final class ConfigType extends AbstractType
                     'bitbag.shopware_poczta_polska_app.config.sandbox_environment' => ConfigInterface::SANDBOX_ENVIRONMENT,
                 ],
             ])
-            ->add('officeOrigin', ChoiceType::class, [
+            ->add('originOffice', ChoiceType::class, [
                 'label' => 'bitbag.shopware_poczta_polska_app.config.office_origin',
                 'required' => true,
-                'choices' => $options['officeOrigins'],
+                'choices' => $options['originOffices'],
             ]);
     }
 
@@ -50,7 +50,7 @@ final class ConfigType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Config::class,
             'salesChannels' => [],
-            'officeOrigins' => [],
+            'originOffices' => [],
         ]);
     }
 
