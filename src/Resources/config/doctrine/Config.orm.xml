@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
+    <entity name="BitBag\ShopwarePocztaPolskaApp\Entity\Config"
+            table="config"
+            repository-class="BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepository"
+    >
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
+
+        <field name="apiLogin" column="api_login" type="string" />
+
+        <field name="apiPassword" column="api_password" type="string" />
+
+        <field name="apiEnvironment" column="api_environment" type="string" />
+
+        <field name="originOffice" column="origin_office" type="string" />
+
+        <field name="salesChannelId" column="sales_channel_id" type="string" />
+
+        <many-to-one field="shop" target-entity="BitBag\ShopwareAppSystemBundle\Entity\Shop">
+            <join-column nullable="false" referenced-column-name="shop_id" on-delete="CASCADE" unique="false" />
+
+            <cascade>
+                <cascade-persist />
+                <cascade-remove />
+            </cascade>
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

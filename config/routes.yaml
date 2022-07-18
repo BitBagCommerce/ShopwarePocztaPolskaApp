@@ -1,2 +1,12 @@
 bitbag_shopware_app_system:
   resource: '@BitBagShopwareAppSystemBundle/Resources/config/routes.yaml'
+
+configuration_module_index:
+  methods: ['GET', 'POST']
+  path: /app/module/configuration
+  controller: BitBag\ShopwarePocztaPolskaApp\Controller\ConfigurationModuleController
+
+config:
+  methods: ['GET']
+  path: /app/config
+  controller: BitBag\ShopwarePocztaPolskaApp\Controller\ConfigController
