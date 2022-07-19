@@ -1,0 +1,19 @@
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="BitBag\ShopwarePocztaPolskaApp\Factory\FeedbackResponseFactory">
+            <argument type="service" id="translator" />
+        </service>
+
+        <service id="BitBag\ShopwarePocztaPolskaApp\Factory\Package\AddressFactory">
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Service\StreetSplitter" />
+        </service>
+
+        <service id="BitBag\ShopwarePocztaPolskaApp\Factory\Package\PostalPackageFactory">
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Calculator\OrderWeightCalculator" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldsResolver" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\PackageSizeResolver" />
+        </service>
+    </services>
+</container>
