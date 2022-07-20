@@ -49,7 +49,7 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
             throw new PackageException('bitbag.shopware_poczta_polska_app.package.null_weight');
         }
 
-        if (PackageSizeResolverInterface::MAX_WEIGHT_PACKAGE < $weight) {
+        if (OrderWeightCalculatorInterface::MAX_WEIGHT_AVAILABLE < $weight) {
             throw new PackageException('bitbag.shopware_poczta_polska_app.package.too_heavy');
         }
 

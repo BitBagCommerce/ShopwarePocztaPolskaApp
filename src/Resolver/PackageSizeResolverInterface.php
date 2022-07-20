@@ -14,8 +14,6 @@ interface PackageSizeResolverInterface
 
     public const PACKAGE_SIZE_B_MAX_DIMENSIONS = 150;
 
-    public const MAX_WEIGHT_PACKAGE = 10;
-
     public function resolve(
         int $depth,
         int $height,
