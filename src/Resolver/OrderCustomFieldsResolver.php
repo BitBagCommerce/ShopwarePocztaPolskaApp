@@ -19,7 +19,7 @@ final class OrderCustomFieldsResolver implements OrderCustomFieldsResolverInterf
         $orderCustomFields = $order->getCustomFields();
 
         if (empty($orderCustomFields)) {
-            throw new PackageException('3bitbag.shopware_poczta_polska_app.package.fill_required_custom_fields');
+            throw new PackageException('bitbag.shopware_poczta_polska_app.package.fill_required_custom_fields');
         }
 
         $depthKey = $packageDetailsKey . '_depth';
@@ -35,7 +35,7 @@ final class OrderCustomFieldsResolver implements OrderCustomFieldsResolverInterf
             $orderCustomFields[$packageContentsKey],
             $orderCustomFields[$plannedShippingDate]
         )) {
-            throw new PackageException('2bitbag.shopware_poczta_polska_app.package.fill_required_custom_fields');
+            throw new PackageException('bitbag.shopware_poczta_polska_app.package.fill_required_custom_fields');
         }
 
         if (0 === $orderCustomFields[$depthKey] ||
@@ -44,7 +44,7 @@ final class OrderCustomFieldsResolver implements OrderCustomFieldsResolverInterf
             null === $orderCustomFields[$packageContentsKey] ||
             null === $orderCustomFields[$plannedShippingDate]
         ) {
-            throw new PackageException('1bitbag.shopware_poczta_polska_app.package.fill_required_custom_fields');
+            throw new PackageException('bitbag.shopware_poczta_polska_app.package.fill_required_custom_fields');
         }
 
         return [
