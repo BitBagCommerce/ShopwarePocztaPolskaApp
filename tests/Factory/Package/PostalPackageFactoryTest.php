@@ -9,7 +9,7 @@ use BitBag\PPClient\Model\PostalPackage;
 use BitBag\PPClient\Model\RecordedDelivery;
 use BitBag\ShopwarePocztaPolskaApp\Calculator\OrderWeightCalculatorInterface;
 use BitBag\ShopwarePocztaPolskaApp\Factory\Package\PostalPackageFactory;
-use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldsResolverInterface;
+use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolverInterface;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\PackageSizeResolverInterface;
 use PHPUnit\Framework\TestCase;
 use Vin\ShopwareSdk\Data\Context;
@@ -45,16 +45,16 @@ final class PostalPackageFactoryTest extends TestCase
         $context = $this->createMock(Context::class);
 
         $orderWeightCalculator = $this->createMock(OrderWeightCalculatorInterface::class);
-        $orderCustomFieldsResolver = $this->createMock(OrderCustomFieldsResolverInterface::class);
+        $orderCustomFieldResolver = $this->createMock(OrderCustomFieldResolverInterface::class);
         $packageSizeResolver = $this->createMock(PackageSizeResolverInterface::class);
 
         $orderWeightCalculator->method('calculate')->with($order, $context)->willReturn(self::ORDER_WEIGHT);
-        $orderCustomFieldsResolver->method('resolve')->with($order)->willReturn($this->getCustomFields());
+        $orderCustomFieldResolver->method('resolve')->with($order)->willReturn($this->getCustomFields());
         $packageSizeResolver->method('resolve')->willReturn(RecordedDelivery::PACKAGE_SIZE_A);
 
         $postalPackageFactory = new PostalPackageFactory(
             $orderWeightCalculator,
-            $orderCustomFieldsResolver,
+            $orderCustomFieldResolver,
             $packageSizeResolver
         );
 

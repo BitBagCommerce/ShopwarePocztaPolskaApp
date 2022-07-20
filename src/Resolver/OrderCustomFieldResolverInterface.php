@@ -6,7 +6,7 @@ namespace BitBag\ShopwarePocztaPolskaApp\Resolver;
 
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
 
-interface OrderCustomFieldsResolverInterface
+interface OrderCustomFieldResolverInterface
 {
     public const PACKAGE_DETAILS_KEY = 'bitbag_shopware_poczta_polska_app_package_details';
 

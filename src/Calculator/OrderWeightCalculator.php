@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BitBag\ShopwarePocztaPolskaApp\Calculator;
 
-use BitBag\ShopwarePocztaPolskaApp\Exception\PackageException;
+use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderWeightException;
 use Vin\ShopwareSdk\Data\Context;
 use Vin\ShopwareSdk\Data\Criteria;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
@@ -62,11 +62,11 @@ final class OrderWeightCalculator implements OrderWeightCalculatorInterface
         }
 
         if (0.0 === $totalWeight) {
-            throw new PackageException('bitbag.shopware_poczta_polska_app.package.null_weight');
+            throw new OrderWeightException('bitbag.shopware_poczta_polska_app.weight.null_weight');
         }
 
         if (self::MAX_WEIGHT_AVAILABLE <= $totalWeight) {
-            throw new PackageException('bitbag.shopware_poczta_polska_app.package.too_heavy');
+            throw new OrderWeightException('bitbag.shopware_poczta_polska_app.weight.too_heavy');
         }
 
         return $totalWeight;

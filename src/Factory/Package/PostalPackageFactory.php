@@ -8,7 +8,7 @@ use BitBag\PPClient\Model\Address;
 use BitBag\PPClient\Model\PostalPackage;
 use BitBag\PPClient\Model\RecordedDelivery;
 use BitBag\ShopwarePocztaPolskaApp\Calculator\OrderWeightCalculatorInterface;
-use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldsResolverInterface;
+use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolverInterface;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\PackageSizeResolverInterface;
 use DateTime;
 use Vin\ShopwareSdk\Data\Context;
@@ -18,11 +18,11 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
 {
     public function __construct(
         private OrderWeightCalculatorInterface $orderWeightCalculator,
-        private OrderCustomFieldsResolverInterface $orderCustomFieldsResolver,
+        private OrderCustomFieldResolverInterface $orderCustomFieldResolver,
         private PackageSizeResolverInterface $packageSizeResolver
     ) {
         $this->orderWeightCalculator = $orderWeightCalculator;
-        $this->orderCustomFieldsResolver = $orderCustomFieldsResolver;
+        $this->orderCustomFieldResolver = $orderCustomFieldResolver;
         $this->packageSizeResolver = $packageSizeResolver;
     }
 
@@ -31,7 +31,7 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
         Address $address,
         Context $context
     ): PostalPackage {
-        $customFields = $this->orderCustomFieldsResolver->resolve($order);
+        $customFields = $this->orderCustomFieldResolver->resolve($order);
         $guid = $this->getGuid();
         $packageSize = $this->packageSizeResolver->resolve(
             $customFields['depth'],

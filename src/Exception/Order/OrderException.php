@@ -6,7 +6,7 @@ namespace BitBag\ShopwarePocztaPolskaApp\Exception\Order;
 
 use Symfony\Component\HttpFoundation\Response;
 
-final class OrderException extends \LogicException
+final class OrderException extends \Exception
 {
     public function getErrorCode(): string
     {

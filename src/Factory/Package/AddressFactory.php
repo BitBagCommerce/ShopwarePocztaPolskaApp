@@ -22,7 +22,7 @@ final class AddressFactory implements AddressFactoryInterface
         $flatNumber = null;
         [, $street, $houseNumber] = $this->streetSplitter->splitStreet($addressStreet);
 
-        if (false !== strpos($houseNumber, '/')) {
+        if (str_contains($houseNumber, '/')) {
             $explodedHouseNumber = explode('/', $houseNumber);
 
             [$houseNumber, $flatNumber] = $explodedHouseNumber;
@@ -34,9 +34,7 @@ final class AddressFactory implements AddressFactoryInterface
         $address->setCity($orderAddress->city);
         $address->setPostCode($orderAddress->zipcode);
         $address->setStreet($street);
-        if (null !== $flatNumber) {
-            $address->setFlatNumber(trim($flatNumber));
-        }
+        $address->setFlatNumber(trim($flatNumber ?? ''));
         $address->setHouseNumber(trim($houseNumber));
         $address->setMobileNumber($orderAddress->phoneNumber);
 
