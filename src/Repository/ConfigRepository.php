@@ -31,7 +31,7 @@ final class ConfigRepository extends ServiceEntityRepository implements ConfigRe
         }
 
         if (null === $config) {
-            throw new ErrorNotificationException('bitbag.shopware_poczta_polska_app.config.credentials_data_not_found');
+            throw new ErrorNotificationException('bitbag.shopware_poczta_polska_app.config.not_found');
         }
 
         return $config;
