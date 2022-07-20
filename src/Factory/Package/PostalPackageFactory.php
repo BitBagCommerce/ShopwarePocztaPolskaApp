@@ -8,7 +8,6 @@ use BitBag\PPClient\Model\Address;
 use BitBag\PPClient\Model\PostalPackage;
 use BitBag\PPClient\Model\RecordedDelivery;
 use BitBag\ShopwarePocztaPolskaApp\Calculator\OrderWeightCalculatorInterface;
-use BitBag\ShopwarePocztaPolskaApp\Exception\PackageException;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldsResolverInterface;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\PackageSizeResolverInterface;
 use DateTime;
