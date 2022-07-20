@@ -45,14 +45,6 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
 
         $weight = $this->orderWeightCalculator->calculate($order, $context);
 
-        if (0.0 === $weight) {
-            throw new PackageException('bitbag.shopware_poczta_polska_app.package.null_weight');
-        }
-
-        if (OrderWeightCalculatorInterface::MAX_WEIGHT_AVAILABLE < $weight) {
-            throw new PackageException('bitbag.shopware_poczta_polska_app.package.too_heavy');
-        }
-
         $package = new PostalPackage();
         $package->setGuid($guid);
         $package->setAddress($address);
