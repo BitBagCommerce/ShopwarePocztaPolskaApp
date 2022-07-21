@@ -7,6 +7,7 @@ namespace BitBag\ShopwarePocztaPolskaApp\Resolver;
 use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderCustomFieldException;
 use BitBag\ShopwarePocztaPolskaApp\Model\OrderCustomFieldModel;
 use BitBag\ShopwarePocztaPolskaApp\Validator\OrderCustomFieldValidatorInterface;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
 
 final class OrderCustomFieldResolver implements OrderCustomFieldResolverInterface
@@ -24,7 +25,14 @@ final class OrderCustomFieldResolver implements OrderCustomFieldResolverInterfac
 
         $violations = $this->orderCustomFieldValidator->validate($orderCustomFields);
         if (0 !== $violations->count()) {
-            throw new OrderCustomFieldException((string) $violations->get(0)->getMessage());
+            $orderCustomFieldsMessage = '';
+
+            /** @var ConstraintViolationInterface $violation */
+            foreach ($violations as $violation) {
+                $orderCustomFieldsMessage .= $violation->getMessage() . "\n";
+            }
+
+            throw new OrderCustomFieldException($orderCustomFieldsMessage);
         }
 
         $depthKey = $packageDetailsKey . '_depth';

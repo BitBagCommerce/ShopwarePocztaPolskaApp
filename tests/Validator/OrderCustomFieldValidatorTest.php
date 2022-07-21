@@ -7,6 +7,7 @@ namespace BitBag\ShopwarePocztaPolskaApp\Tests\Validator;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolverInterface;
 use BitBag\ShopwarePocztaPolskaApp\Validator\OrderCustomFieldValidator;
 use PHPUnit\Framework\TestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class OrderCustomFieldValidatorTest extends TestCase
 {
@@ -28,7 +29,10 @@ final class OrderCustomFieldValidatorTest extends TestCase
         $data = $this->data;
         unset($data['bitbag_shopware_poczta_polska_app_package_details_depth']);
 
-        $orderCustomFieldValidator = new OrderCustomFieldValidator();
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')
+                   ->willReturn('foo');
+        $orderCustomFieldValidator = new OrderCustomFieldValidator($translator);
         self::assertEquals(
             1,
             $orderCustomFieldValidator->validate($data)->count()
@@ -40,7 +44,10 @@ final class OrderCustomFieldValidatorTest extends TestCase
         $data = $this->data;
         unset($data['bitbag_shopware_poczta_polska_app_package_details_height']);
 
-        $orderCustomFieldValidator = new OrderCustomFieldValidator();
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')
+                   ->willReturn('foo');
+        $orderCustomFieldValidator = new OrderCustomFieldValidator($translator);
         self::assertEquals(
             1,
             $orderCustomFieldValidator->validate($data)->count()
@@ -52,7 +59,10 @@ final class OrderCustomFieldValidatorTest extends TestCase
         $data = $this->data;
         unset($data['bitbag_shopware_poczta_polska_app_package_details_width']);
 
-        $orderCustomFieldValidator = new OrderCustomFieldValidator();
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')
+                   ->willReturn('foo');
+        $orderCustomFieldValidator = new OrderCustomFieldValidator($translator);
         self::assertEquals(
             1,
             $orderCustomFieldValidator->validate($data)->count()
@@ -64,7 +74,10 @@ final class OrderCustomFieldValidatorTest extends TestCase
         $data = $this->data;
         unset($data['bitbag_shopware_poczta_polska_app_package_details_package_contents']);
 
-        $orderCustomFieldValidator = new OrderCustomFieldValidator();
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')
+                   ->willReturn('foo');
+        $orderCustomFieldValidator = new OrderCustomFieldValidator($translator);
         self::assertEquals(
             1,
             $orderCustomFieldValidator->validate($data)->count()
@@ -76,7 +89,10 @@ final class OrderCustomFieldValidatorTest extends TestCase
         $data = $this->data;
         unset($data['bitbag_shopware_poczta_polska_app_package_details_planned_shipping_date']);
 
-        $orderCustomFieldValidator = new OrderCustomFieldValidator();
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')
+                   ->willReturn('foo');
+        $orderCustomFieldValidator = new OrderCustomFieldValidator($translator);
         self::assertEquals(
             1,
             $orderCustomFieldValidator->validate($data)->count()
