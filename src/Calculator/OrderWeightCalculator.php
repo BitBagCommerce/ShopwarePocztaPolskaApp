@@ -62,11 +62,11 @@ final class OrderWeightCalculator implements OrderWeightCalculatorInterface
         }
 
         if (0.0 === $totalWeight) {
-            throw new OrderWeightException('bitbag.shopware_poczta_polska_app.weight.null_weight');
+            throw new OrderWeightException('bitbag.shopware_poczta_polska_app.order.products.null_weight');
         }
 
         if (self::MAX_WEIGHT_AVAILABLE <= $totalWeight) {
-            throw new OrderWeightException('bitbag.shopware_poczta_polska_app.weight.too_heavy');
+            throw new OrderWeightException('bitbag.shopware_poczta_polska_app.order.products.weight_too_heavy');
         }
 
         return $totalWeight;

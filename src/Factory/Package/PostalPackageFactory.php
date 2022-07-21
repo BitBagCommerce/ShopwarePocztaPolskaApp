@@ -34,13 +34,12 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
         $customFields = $this->orderCustomFieldResolver->resolve($order);
         $guid = $this->getGuid();
         $packageSize = $this->packageSizeResolver->resolve(
-            $customFields['depth'],
-            $customFields['height'],
-            $customFields['width']
+            $customFields->getDepth(),
+            $customFields->getHeight(),
+            $customFields->getWidth()
         );
-
-        $plannedShippingDate = $customFields['plannedShippingDate'];
-        $description = $customFields['packageContents'];
+        $plannedShippingDate = $customFields->getPlannedShippingDate();
+        $description = $customFields->getPackageContents();
 
         $weight = $this->orderWeightCalculator->calculate($order, $context);
 

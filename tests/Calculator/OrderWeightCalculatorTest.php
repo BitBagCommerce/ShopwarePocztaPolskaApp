@@ -66,7 +66,7 @@ final class OrderWeightCalculatorTest extends WebTestCase
 
     public function testTooHeavy(): void
     {
-        $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.weight.too_heavy');
+        $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.order.products.weight_too_heavy');
 
         $context = $this->createMock(Context::class);
 
