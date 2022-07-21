@@ -15,7 +15,7 @@ bitbag:
                 package_contents_invalid: 'Custom field is package contents invalid'
                 planned_shipping_date_invalid: 'Custom field shipping date is invalid'
             products:
-                weight_too_heavy: 'Package is too heavy (maximum 10 kg)'
+                too_heavy: 'Package is too heavy (maximum 10 kg)'
                 null_weight: 'Package weight must be greater than 0.0 kg'
         config:
             sales_channel: 'Sales channel'

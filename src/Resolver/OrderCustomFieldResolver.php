@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BitBag\ShopwarePocztaPolskaApp\Resolver;
 
+use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderCustomFieldException;
 use BitBag\ShopwarePocztaPolskaApp\Model\OrderCustomFieldModel;
 use BitBag\ShopwarePocztaPolskaApp\Validator\OrderCustomFieldValidatorInterface;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
@@ -21,7 +22,10 @@ final class OrderCustomFieldResolver implements OrderCustomFieldResolverInterfac
         /** @psalm-var array<array-key, mixed>|null */
         $orderCustomFields = $order->getCustomFields() ?? [];
 
-        $this->orderCustomFieldValidator->validate($orderCustomFields);
+        $violations = $this->orderCustomFieldValidator->validate($orderCustomFields);
+        if (0 !== $violations->count()) {
+            throw new OrderCustomFieldException((string) $violations->get(0)->getMessage());
+        }
 
         $depthKey = $packageDetailsKey . '_depth';
         $heightKey = $packageDetailsKey . '_height';

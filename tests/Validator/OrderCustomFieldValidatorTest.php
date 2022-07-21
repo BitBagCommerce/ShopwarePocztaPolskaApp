@@ -25,56 +25,61 @@ final class OrderCustomFieldValidatorTest extends TestCase
 
     public function testValidateEmptyDepth(): void
     {
-        $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.order.custom_fields.depth_invalid');
-
         $data = $this->data;
         unset($data['bitbag_shopware_poczta_polska_app_package_details_depth']);
 
         $orderCustomFieldValidator = new OrderCustomFieldValidator();
-        $orderCustomFieldValidator->validate($data);
+        self::assertEquals(
+            1,
+            $orderCustomFieldValidator->validate($data)->count()
+        );
     }
 
     public function testValidateEmptyHeight(): void
     {
-        $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.order.custom_fields.height_invalid');
-
         $data = $this->data;
         unset($data['bitbag_shopware_poczta_polska_app_package_details_height']);
 
         $orderCustomFieldValidator = new OrderCustomFieldValidator();
-        $orderCustomFieldValidator->validate($data);
+        self::assertEquals(
+            1,
+            $orderCustomFieldValidator->validate($data)->count()
+        );
     }
 
     public function testValidateEmptyWidth(): void
     {
-        $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.order.custom_fields.width_invalid');
-
         $data = $this->data;
         unset($data['bitbag_shopware_poczta_polska_app_package_details_width']);
 
         $orderCustomFieldValidator = new OrderCustomFieldValidator();
-        $orderCustomFieldValidator->validate($data);
+        self::assertEquals(
+            1,
+            $orderCustomFieldValidator->validate($data)->count()
+        );
     }
 
     public function testValidateEmptyPackageContents(): void
     {
-        $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.order.custom_fields.package_contents_invalid');
-
         $data = $this->data;
         unset($data['bitbag_shopware_poczta_polska_app_package_details_package_contents']);
 
         $orderCustomFieldValidator = new OrderCustomFieldValidator();
-        $orderCustomFieldValidator->validate($data);
+        self::assertEquals(
+            1,
+            $orderCustomFieldValidator->validate($data)->count()
+        );
     }
 
     public function testValidateEmptyPlannedShippingDate(): void
     {
-        $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.order.custom_fields.planned_shipping_date_invalid');
-
         $data = $this->data;
         unset($data['bitbag_shopware_poczta_polska_app_package_details_planned_shipping_date']);
 
         $orderCustomFieldValidator = new OrderCustomFieldValidator();
-        $orderCustomFieldValidator->validate($data);
+        self::assertEquals(
+            1,
+            $orderCustomFieldValidator->validate($data)->count()
+        );
     }
 }

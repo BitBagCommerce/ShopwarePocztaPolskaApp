@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace BitBag\ShopwarePocztaPolskaApp\Validator;
 
-use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderCustomFieldException;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolverInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 final class OrderCustomFieldValidator implements OrderCustomFieldValidatorInterface
 {
-    public function validate(array $data): void
+    public function validate(array $data): ConstraintViolationListInterface
     {
         $depthKey = OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY . '_depth';
         $heightKey = OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY . '_height';
@@ -61,10 +61,6 @@ final class OrderCustomFieldValidator implements OrderCustomFieldValidatorInterf
             ]),
         ]);
 
-        $validator = Validation::createValidator();
-        $violations = $validator->validate($data, $constraint);
-        if (0 !== $violations->count()) {
-            throw new OrderCustomFieldException((string) $violations->get(0)->getMessage());
-        }
+        return Validation::createValidator()->validate($data, $constraint);
     }
 }

@@ -10,6 +10,7 @@ use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolver;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolverInterface;
 use BitBag\ShopwarePocztaPolskaApp\Validator\OrderCustomFieldValidatorInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
 
 final class OrderCustomFieldResolverTest extends TestCase
@@ -17,6 +18,8 @@ final class OrderCustomFieldResolverTest extends TestCase
     public function testResolveWithCustomFields(): void
     {
         $orderCustomFieldValidator = $this->createMock(OrderCustomFieldValidatorInterface::class);
+        $orderCustomFieldValidator->method('validate')
+                                  ->willReturn(new ConstraintViolationList());
         $orderCustomFieldResolver = new OrderCustomFieldResolver($orderCustomFieldValidator);
         $order = $this->getOrderWithCustomFields();
         $orderCustomFieldModel = new OrderCustomFieldModel(
