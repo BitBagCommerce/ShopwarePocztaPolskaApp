@@ -19,8 +19,8 @@ bitbag:
                 null_weight: 'Package weight must be greater than 0.0 kg'
         config:
             sales_channel: 'Sales channel'
-            sales_channels: 'Sales channels'
-            api_login: 'API Login'
+            sales_channels: 'All Sales channels'
+            api_login: 'API Login (e-mail)'
             api_password: 'API Password'
             api_environment: 'API Environment'
             office_origin: 'Office of origin'

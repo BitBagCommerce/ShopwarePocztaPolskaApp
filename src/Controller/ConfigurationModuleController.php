@@ -11,6 +11,7 @@ use BitBag\ShopwarePocztaPolskaApp\Entity\Config;
 use BitBag\ShopwarePocztaPolskaApp\Finder\SalesChannelFinderInterface;
 use BitBag\ShopwarePocztaPolskaApp\Form\Type\ConfigType;
 use BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepositoryInterface;
+use BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolverInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,32 +23,15 @@ use Vin\ShopwareSdk\Data\Entity\SalesChannel\SalesChannelEntity;
 
 final class ConfigurationModuleController extends AbstractController
 {
-    private ConfigRepositoryInterface $configRepository;
-
-    private EntityManagerInterface $entityManager;
-
-    private ShopRepositoryInterface $shopRepository;
-
-    private TranslatorInterface $translator;
-
-    private SalesChannelFinderInterface $salesChannelFinder;
-
-    private ContextFactoryInterface $contextFactory;
-
     public function __construct(
-        ConfigRepositoryInterface $configRepository,
-        EntityManagerInterface $entityManager,
-        ShopRepositoryInterface $shopRepository,
-        TranslatorInterface $translator,
-        SalesChannelFinderInterface $salesChannelFinder,
-        ContextFactoryInterface $contextFactory
+        private ConfigRepositoryInterface $configRepository,
+        private EntityManagerInterface $entityManager,
+        private ShopRepositoryInterface $shopRepository,
+        private TranslatorInterface $translator,
+        private SalesChannelFinderInterface $salesChannelFinder,
+        private ContextFactoryInterface $contextFactory,
+        private ApiResolverInterface $apiResolver
     ) {
-        $this->configRepository = $configRepository;
-        $this->entityManager = $entityManager;
-        $this->shopRepository = $shopRepository;
-        $this->translator = $translator;
-        $this->salesChannelFinder = $salesChannelFinder;
-        $this->contextFactory = $contextFactory;
     }
 
     public function __invoke(Request $request): Response
@@ -73,7 +57,7 @@ final class ConfigurationModuleController extends AbstractController
 
         $form = $this->createForm(ConfigType::class, $config, [
             'salesChannels' => $this->getSalesChannelsForForm($context),
-            'originOffices' => $this->getoriginOffices(),
+            'originOffices' => $this->getoriginOffices($shopId, ''),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -110,11 +94,16 @@ final class ConfigurationModuleController extends AbstractController
         );
     }
 
-    private function getoriginOffices(): array
+    private function getOriginOffices(string $shopId, string $salesChannelId): array
     {
-        return [
-            'UP Gdańsk 48' => 239467,
-            'WER Pruszcz Gd.' => 433416,
-        ];
+        $client = $this->apiResolver->getClient($shopId, $salesChannelId);
+        $originOffices = $client->getOriginOffice()->getOriginOffice();
+        $items = [];
+
+        foreach ($originOffices as $originOffice) {
+            $items[$originOffice->getName()] = $originOffice->getId();
+        }
+
+        return $items;
     }
 }
