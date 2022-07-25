@@ -8,7 +8,7 @@ use BitBag\ShopwareAppSystemBundle\Exception\ShopNotFoundException;
 use BitBag\ShopwareAppSystemBundle\Factory\Context\ContextFactoryInterface;
 use BitBag\ShopwareAppSystemBundle\Repository\ShopRepositoryInterface;
 use BitBag\ShopwarePocztaPolskaApp\Entity\Config;
-use BitBag\ShopwarePocztaPolskaApp\Exception\ErrorNotificationException;
+use BitBag\ShopwarePocztaPolskaApp\Exception\ConfigNotFoundException;
 use BitBag\ShopwarePocztaPolskaApp\Finder\SalesChannelFinderInterface;
 use BitBag\ShopwarePocztaPolskaApp\Form\Type\ConfigType;
 use BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepositoryInterface;
@@ -38,9 +38,7 @@ final class ConfigurationModuleController extends AbstractController
 
     public function __invoke(Request $request): Response
     {
-        $session = $request->getSession();
         $shopId = $request->query->get('shop-id', '');
-        $originOffices = $this->getOriginOffices($shopId, '');
         $shop = $this->shopRepository->find($shopId);
         if (null === $shop) {
             throw new ShopNotFoundException($shopId);
@@ -51,8 +49,17 @@ final class ConfigurationModuleController extends AbstractController
             throw new UnauthorizedHttpException('');
         }
 
-        if ([] === $originOffices) {
-            $session->getFlashBag()->add('error', $this->translator->trans('bitbag.shopware_poczta_polska_app.config.origin_office_available_after_valid_data'));
+        $session = $request->getSession();
+
+        $originOffices = [];
+
+        try {
+            $originOffices = $this->getOriginOfficesForForm($shopId, '');
+        } catch (SoapFault $e) {
+            if (ApiResolverInterface::STATUS_UNAUTHORIZED === $e->getMessage()) {
+                $session->getFlashBag()->add('error', $this->translator->trans('bitbag.shopware_poczta_polska_app.config.notification_message_error'));
+            }
+        } catch (ConfigNotFoundException) {
         }
 
         $config = $this->configRepository->findByShopIdAndSalesChannelId($shopId, '') ?? new Config();
@@ -76,9 +83,18 @@ final class ConfigurationModuleController extends AbstractController
 
             $session->getFlashBag()->add('success', $this->translator->trans('bitbag.shopware_poczta_polska_app.config.saved'));
 
+            try {
+                $originOffices = $this->getOriginOfficesForForm($shopId, '');
+            } catch (SoapFault $e) {
+                if (ApiResolverInterface::STATUS_UNAUTHORIZED === $e->getMessage()) {
+                    $session->getFlashBag()->add('error', $this->translator->trans('bitbag.shopware_poczta_polska_app.config.notification_message_error'));
+                }
+            } catch (ConfigNotFoundException) {
+            }
+
             $form = $this->createForm(ConfigType::class, $config, [
                 'salesChannels' => $this->getSalesChannelsForForm($context),
-                'originOffices' => $this->getOriginOffices($shopId, ''),
+                'originOffices' => $originOffices,
             ]);
         }
 
@@ -106,24 +122,10 @@ final class ConfigurationModuleController extends AbstractController
         );
     }
 
-    private function getOriginOffices(string $shopId, string $salesChannelId): array
+    private function getOriginOfficesForForm(string $shopId, string $salesChannelId): array
     {
-        try {
-            $client = $this->apiResolver->getClient($shopId, $salesChannelId);
-        } catch (ErrorNotificationException) {
-            return [];
-        }
-
-        $originOffices = [];
-
-        try {
-            $originOffices = $client->getOriginOffice()->getOriginOffices();
-        } catch (SoapFault $e) {
-            if (ApiResolverInterface::STATUS_UNAUTHORIZED === $e->getMessage()) {
-                return [];
-            }
-        }
-
+        $client = $this->apiResolver->getClient($shopId, $salesChannelId);
+        $originOffices = $client->getOriginOffice()->getOriginOffices();
         $items = [];
 
         foreach ($originOffices as $originOffice) {

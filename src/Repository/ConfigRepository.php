@@ -6,7 +6,7 @@ namespace BitBag\ShopwarePocztaPolskaApp\Repository;
 
 use BitBag\ShopwarePocztaPolskaApp\Entity\Config;
 use BitBag\ShopwarePocztaPolskaApp\Entity\ConfigInterface;
-use BitBag\ShopwarePocztaPolskaApp\Exception\ErrorNotificationException;
+use BitBag\ShopwarePocztaPolskaApp\Exception\ConfigNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -31,7 +31,7 @@ final class ConfigRepository extends ServiceEntityRepository implements ConfigRe
         }
 
         if (null === $config) {
-            throw new ErrorNotificationException('bitbag.shopware_poczta_polska_app.config.not_found');
+            throw new ConfigNotFoundException('bitbag.shopware_poczta_polska_app.config.not_found');
         }
 
         return $config;

@@ -20,7 +20,7 @@ bitbag:
         config:
             sales_channel: 'Sales channel'
             sales_channels: 'All Sales channels'
-            api_login: 'API Login (e-mail)'
+            api_login: 'API Login (email)'
             api_password: 'API Password'
             api_environment: 'API Environment'
             office_origin: 'Office of origin'
@@ -34,7 +34,8 @@ bitbag:
             notification_label_error: 'Error'
             notification_message_success: 'Provided data is valid'
             notification_message_error: 'Provided data is not valid'
-            origin_office_available_after_valid_data: 'Office of origin has been available after save provided API data'
+            origin_offices:
+                valid_credentials_first: 'Origin offices will be available after a valid API configuration has been provided'
         package:
             already_created: 'A package has already been created'
             not_found: 'Package was not found. Create a package first'
