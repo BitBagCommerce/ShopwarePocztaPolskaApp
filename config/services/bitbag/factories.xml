@@ -12,7 +12,7 @@
 
         <service id="BitBag\ShopwarePocztaPolskaApp\Factory\Package\PostalPackageFactory">
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Calculator\OrderWeightCalculator" />
-            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldsResolver" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolver" />
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\PackageSizeResolver" />
         </service>
     </services>
