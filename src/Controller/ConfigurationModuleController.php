@@ -8,11 +8,13 @@ use BitBag\ShopwareAppSystemBundle\Exception\ShopNotFoundException;
 use BitBag\ShopwareAppSystemBundle\Factory\Context\ContextFactoryInterface;
 use BitBag\ShopwareAppSystemBundle\Repository\ShopRepositoryInterface;
 use BitBag\ShopwarePocztaPolskaApp\Entity\Config;
+use BitBag\ShopwarePocztaPolskaApp\Exception\ErrorNotificationException;
 use BitBag\ShopwarePocztaPolskaApp\Finder\SalesChannelFinderInterface;
 use BitBag\ShopwarePocztaPolskaApp\Form\Type\ConfigType;
 use BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepositoryInterface;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolverInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use SoapFault;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,13 +32,15 @@ final class ConfigurationModuleController extends AbstractController
         private TranslatorInterface $translator,
         private SalesChannelFinderInterface $salesChannelFinder,
         private ContextFactoryInterface $contextFactory,
-        private ApiResolverInterface $apiResolver
+        private ApiResolverInterface $apiResolver,
     ) {
     }
 
     public function __invoke(Request $request): Response
     {
+        $session = $request->getSession();
         $shopId = $request->query->get('shop-id', '');
+        $originOffices = $this->getOriginOffices($shopId, '');
         $shop = $this->shopRepository->find($shopId);
         if (null === $shop) {
             throw new ShopNotFoundException($shopId);
@@ -45,6 +49,10 @@ final class ConfigurationModuleController extends AbstractController
         $context = $this->contextFactory->create($shop);
         if (null === $context) {
             throw new UnauthorizedHttpException('');
+        }
+
+        if ([] === $originOffices) {
+            $session->getFlashBag()->add('error', $this->translator->trans('bitbag.shopware_poczta_polska_app.config.origin_office_available_after_valid_data'));
         }
 
         $config = $this->configRepository->findByShopIdAndSalesChannelId($shopId, '') ?? new Config();
@@ -57,7 +65,7 @@ final class ConfigurationModuleController extends AbstractController
 
         $form = $this->createForm(ConfigType::class, $config, [
             'salesChannels' => $this->getSalesChannelsForForm($context),
-            'originOffices' => $this->getoriginOffices($shopId, ''),
+            'originOffices' => $originOffices,
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -66,8 +74,12 @@ final class ConfigurationModuleController extends AbstractController
             $this->entityManager->persist($config);
             $this->entityManager->flush();
 
-            $session = $request->getSession();
             $session->getFlashBag()->add('success', $this->translator->trans('bitbag.shopware_poczta_polska_app.config.saved'));
+
+            $form = $this->createForm(ConfigType::class, $config, [
+                'salesChannels' => $this->getSalesChannelsForForm($context),
+                'originOffices' => $this->getOriginOffices($shopId, ''),
+            ]);
         }
 
         return $this->renderForm('configuration_module/index.html.twig', [
@@ -96,8 +108,22 @@ final class ConfigurationModuleController extends AbstractController
 
     private function getOriginOffices(string $shopId, string $salesChannelId): array
     {
-        $client = $this->apiResolver->getClient($shopId, $salesChannelId);
-        $originOffices = $client->getOriginOffice()->getOriginOffice();
+        try {
+            $client = $this->apiResolver->getClient($shopId, $salesChannelId);
+        } catch (ErrorNotificationException) {
+            return [];
+        }
+
+        $originOffices = [];
+
+        try {
+            $originOffices = $client->getOriginOffice()->getOriginOffices();
+        } catch (SoapFault $e) {
+            if (ApiResolverInterface::STATUS_UNAUTHORIZED === $e->getMessage()) {
+                return [];
+            }
+        }
+
         $items = [];
 
         foreach ($originOffices as $originOffice) {

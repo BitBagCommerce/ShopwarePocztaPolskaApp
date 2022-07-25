@@ -26,7 +26,7 @@
             {% if app.session is not null and app.session.started %}
                 {% for label, messages in app.session.flashbag.all %}
                     {% for message in messages %}
-                        <div class="sw-card">
+                        <div class="sw-card {% if label == 'error' %}error-message{% endif %}">
                             <div class="sw-card__content">
                                 <div class="sw-container">{{ message }}</div>
                             </div>

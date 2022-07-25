@@ -10,7 +10,7 @@ use BitBag\PPClient\Factory\Client\SoapClientFactory;
 use BitBag\PPClient\Factory\Response\AddShipmentResponseFactory;
 use BitBag\PPClient\Factory\Response\ClearEnvelopeResponseFactory;
 use BitBag\PPClient\Factory\Response\GetLabelResponseFactory;
-use BitBag\PPClient\Factory\Response\OriginOfficeResponseFactory;
+use BitBag\PPClient\Factory\Response\GetOriginOfficeResponseFactory;
 use BitBag\PPClient\Factory\Response\SendEnvelopeResponseFactory;
 use BitBag\PPClient\Normalizer\ArrayNormalizer;
 use BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepositoryInterface;
@@ -38,7 +38,7 @@ final class ApiResolver implements ApiResolverInterface
             new ClearEnvelopeResponseFactory($arrayNormalizer),
             new GetLabelResponseFactory($arrayNormalizer),
             new SendEnvelopeResponseFactory($arrayNormalizer),
-            new OriginOfficeResponseFactory()
+            new GetOriginOfficeResponseFactory()
         );
     }
 }
