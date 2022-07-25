@@ -7,13 +7,17 @@ namespace BitBag\ShopwarePocztaPolskaApp\Factory\Package;
 use BitBag\PPClient\Model\Address;
 use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderAddressException;
 use BitBag\ShopwarePocztaPolskaApp\Service\StreetSplitterInterface;
+use BitBag\ShopwarePocztaPolskaApp\Validator\PhoneNumberValidatorInterface;
+use BitBag\ShopwarePocztaPolskaApp\Validator\PostalCodeValidatorInterface;
 use Vin\ShopwareSdk\Data\Entity\OrderAddress\OrderAddressEntity;
 
 final class AddressFactory implements AddressFactoryInterface
 {
-    public function __construct(private StreetSplitterInterface $streetSplitter)
-    {
-        $this->streetSplitter = $streetSplitter;
+    public function __construct(
+        private StreetSplitterInterface $streetSplitter,
+        private PhoneNumberValidatorInterface $phoneNumberValidator,
+        private PostalCodeValidatorInterface $postalCodeValidator
+    ) {
     }
 
     public function create(OrderAddressEntity $orderAddress, string $email): Address
@@ -30,14 +34,12 @@ final class AddressFactory implements AddressFactoryInterface
         }
 
         $phoneNumber = $orderAddress->phoneNumber;
-        if (null === $phoneNumber) {
-            throw new OrderAddressException('bitbag.shopware_dpd_app.order.address.phone_number_empty');
+        $phoneNumberValidator = $this->phoneNumberValidator->validate($phoneNumber);
+        if (0 !== $phoneNumberValidator->count()) {
+            throw new OrderAddressException((string) $phoneNumberValidator->get(0)->getMessage());
         }
 
-        $phoneNumber = str_replace(['+48', '+', '-', ' '], '', $phoneNumber);
-        $this->checkPhoneNumberValidity($phoneNumber);
-
-        $postalCode = str_replace('-', '', $orderAddress->zipcode);
+        $postalCode = $orderAddress->zipcode;
         $this->checkPostCodeValidity($postalCode);
 
         $address = new Address();
@@ -53,33 +55,14 @@ final class AddressFactory implements AddressFactoryInterface
         return $address;
     }
 
-    private function checkPhoneNumberValidity(string $phoneNumber): void
+    private function checkPostCodeValidity(string $postalCode): void
     {
-        preg_match(self::PHONE_NUMBER_REGEX, $phoneNumber, $phoneNumberMatches);
-
-        if ([] === $phoneNumberMatches) {
-            throw new OrderAddressException('bitbag.shopware_dpd_app.order.address.phone_number_invalid');
-        }
-
-        $phoneNumberLength = strlen($phoneNumberMatches[0]);
-
-        if (self::PHONE_NUMBER_LENGTH !== $phoneNumberLength) {
-            throw new OrderAddressException('bitbag.shopware_dpd_app.order.address.phone_number_invalid');
-        }
-    }
-
-    private function isPostCodeValid(string $postCode): bool
-    {
-        return (bool) preg_match(self::POST_CODE_REGEX, $postCode);
-    }
-
-    private function checkPostCodeValidity(string $postCode): void
-    {
-        if (!$this->isPostCodeValid($postCode)) {
-            $postCode = trim(substr_replace($postCode, '-', 2, 0));
-
-            if (!$this->isPostCodeValid($postCode)) {
-                throw new OrderAddressException('bitbag.shopware_dpd_app.order.address.post_code_invalid');
+        $postalCodeValidator = $this->postalCodeValidator->validate($postalCode);
+        if (0 !== $postalCodeValidator->count()) {
+            $postalCode = trim(substr_replace($postalCode, '-', 2, 0));
+            $postalCodeValidator = $this->postalCodeValidator->validate($postalCode);
+            if (0 !== $postalCodeValidator->count()) {
+                throw new OrderAddressException((string) $postalCodeValidator->get(0)->getMessage());
             }
         }
     }
