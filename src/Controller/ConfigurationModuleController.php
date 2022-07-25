@@ -8,10 +8,13 @@ use BitBag\ShopwareAppSystemBundle\Exception\ShopNotFoundException;
 use BitBag\ShopwareAppSystemBundle\Factory\Context\ContextFactoryInterface;
 use BitBag\ShopwareAppSystemBundle\Repository\ShopRepositoryInterface;
 use BitBag\ShopwarePocztaPolskaApp\Entity\Config;
+use BitBag\ShopwarePocztaPolskaApp\Exception\ConfigNotFoundException;
 use BitBag\ShopwarePocztaPolskaApp\Finder\SalesChannelFinderInterface;
 use BitBag\ShopwarePocztaPolskaApp\Form\Type\ConfigType;
 use BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepositoryInterface;
+use BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolverInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use SoapFault;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,32 +25,15 @@ use Vin\ShopwareSdk\Data\Entity\SalesChannel\SalesChannelEntity;
 
 final class ConfigurationModuleController extends AbstractController
 {
-    private ConfigRepositoryInterface $configRepository;
-
-    private EntityManagerInterface $entityManager;
-
-    private ShopRepositoryInterface $shopRepository;
-
-    private TranslatorInterface $translator;
-
-    private SalesChannelFinderInterface $salesChannelFinder;
-
-    private ContextFactoryInterface $contextFactory;
-
     public function __construct(
-        ConfigRepositoryInterface $configRepository,
-        EntityManagerInterface $entityManager,
-        ShopRepositoryInterface $shopRepository,
-        TranslatorInterface $translator,
-        SalesChannelFinderInterface $salesChannelFinder,
-        ContextFactoryInterface $contextFactory
-    ) {
-        $this->configRepository = $configRepository;
-        $this->entityManager = $entityManager;
-        $this->shopRepository = $shopRepository;
-        $this->translator = $translator;
-        $this->salesChannelFinder = $salesChannelFinder;
-        $this->contextFactory = $contextFactory;
+        private ConfigRepositoryInterface $configRepository,
+        private EntityManagerInterface $entityManager,
+        private ShopRepositoryInterface $shopRepository,
+        private TranslatorInterface $translator,
+        private SalesChannelFinderInterface $salesChannelFinder,
+        private ContextFactoryInterface $contextFactory,
+        private ApiResolverInterface $apiResolver,
+        ) {
     }
 
     public function __invoke(Request $request): Response
@@ -63,6 +49,19 @@ final class ConfigurationModuleController extends AbstractController
             throw new UnauthorizedHttpException('');
         }
 
+        $session = $request->getSession();
+
+        $originOffices = [];
+
+        try {
+            $originOffices = $this->getOriginOfficesForForm($shopId, '');
+        } catch (SoapFault $e) {
+            if (ApiResolverInterface::STATUS_UNAUTHORIZED === $e->getMessage()) {
+                $session->getFlashBag()->add('error', $this->translator->trans('bitbag.shopware_poczta_polska_app.config.notification_message_error'));
+            }
+        } catch (ConfigNotFoundException) {
+        }
+
         $config = $this->configRepository->findByShopIdAndSalesChannelId($shopId, '') ?? new Config();
 
         if ($request->isMethod('POST')) {
@@ -73,7 +72,7 @@ final class ConfigurationModuleController extends AbstractController
 
         $form = $this->createForm(ConfigType::class, $config, [
             'salesChannels' => $this->getSalesChannelsForForm($context),
-            'originOffices' => $this->getoriginOffices(),
+            'originOffices' => $originOffices,
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -82,8 +81,21 @@ final class ConfigurationModuleController extends AbstractController
             $this->entityManager->persist($config);
             $this->entityManager->flush();
 
-            $session = $request->getSession();
             $session->getFlashBag()->add('success', $this->translator->trans('bitbag.shopware_poczta_polska_app.config.saved'));
+
+            try {
+                $originOffices = $this->getOriginOfficesForForm($shopId, '');
+            } catch (SoapFault $e) {
+                if (ApiResolverInterface::STATUS_UNAUTHORIZED === $e->getMessage()) {
+                    $session->getFlashBag()->add('error', $this->translator->trans('bitbag.shopware_poczta_polska_app.config.notification_message_error'));
+                }
+            } catch (ConfigNotFoundException) {
+            }
+
+            $form = $this->createForm(ConfigType::class, $config, [
+                'salesChannels' => $this->getSalesChannelsForForm($context),
+                'originOffices' => $originOffices,
+            ]);
         }
 
         return $this->renderForm('configuration_module/index.html.twig', [
@@ -110,11 +122,16 @@ final class ConfigurationModuleController extends AbstractController
         );
     }
 
-    private function getoriginOffices(): array
+    private function getOriginOfficesForForm(string $shopId, string $salesChannelId): array
     {
-        return [
-            'UP Gdańsk 48' => 239467,
-            'WER Pruszcz Gd.' => 433416,
-        ];
+        $client = $this->apiResolver->getClient($shopId, $salesChannelId);
+        $originOffices = $client->getOriginOffice()->getOriginOffices();
+        $items = [];
+
+        foreach ($originOffices as $originOffice) {
+            $items[$originOffice->getName()] = $originOffice->getId();
+        }
+
+        return $items;
     }
 }

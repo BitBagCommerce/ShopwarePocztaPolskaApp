@@ -7,5 +7,9 @@
         </service>
 
         <service id="BitBag\ShopwarePocztaPolskaApp\Resolver\PackageSizeResolver" />
+
+        <service id="BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolver">
+                <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepository" />
+        </service>
     </services>
 </container>
