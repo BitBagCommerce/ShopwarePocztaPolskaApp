@@ -33,8 +33,8 @@ final class AddressFactoryTest extends TestCase
         $address->setHouseNumber('4');
         $address->setFlatNumber('5');
         $address->setCity('Warszawa');
-        $address->setPostCode('02-495');
-        $address->setMobileNumber('500-000-000');
+        $address->setPostCode('02495');
+        $address->setMobileNumber('500000000');
         $address->setEmail('email@test.com');
 
         $addressFactory = new AddressFactory($streetSplitter);

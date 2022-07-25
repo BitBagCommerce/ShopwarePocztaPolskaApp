@@ -17,6 +17,10 @@ bitbag:
             products:
                 too_heavy: 'Package is too heavy (maximum 10 kg)'
                 null_weight: 'Package weight must be greater than 0.0 kg'
+            address:
+                post_code_invalid: 'Post code is invalid (valid format is: 12-345)'
+                phone_number_invalid: 'Phone number is invalid (valid format: 111-222-333)'
+                phone_number_empty: 'Phone number cannot be empty'
         config:
             sales_channel: 'Sales channel'
             sales_channels: 'All Sales channels'
