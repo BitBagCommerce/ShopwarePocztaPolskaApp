@@ -35,10 +35,10 @@ final class AddressFactory implements AddressFactoryInterface
         }
 
         $phoneNumber = $orderAddress->phoneNumber;
-        $this->throwOnConstraintValidation($phoneNumber, new IsPhoneNumber());
+        $this->throwOnConstraintViolations($phoneNumber, new IsPhoneNumber());
 
         $postalCode = $orderAddress->zipcode;
-        $this->throwOnConstraintValidation($postalCode, new IsPostalCode());
+        $this->throwOnConstraintViolations($postalCode, new IsPostalCode());
 
         $address = new Address();
         $address->setName($orderAddress->firstName . ' ' . $orderAddress->lastName);
@@ -53,7 +53,7 @@ final class AddressFactory implements AddressFactoryInterface
         return $address;
     }
 
-    private function throwOnConstraintValidation(string $value, Constraint $constraint): void
+    private function throwOnConstraintViolations(string $value, Constraint $constraint): void
     {
         $violationList = $this->validator->validate($value, $constraint);
         if (0 !== $violationList->count()) {
