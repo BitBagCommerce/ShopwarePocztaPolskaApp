@@ -9,6 +9,7 @@ use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderAddressException;
 use BitBag\ShopwarePocztaPolskaApp\Service\StreetSplitterInterface;
 use BitBag\ShopwarePocztaPolskaApp\Validator\IsPhoneNumber;
 use BitBag\ShopwarePocztaPolskaApp\Validator\IsPostalCode;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Vin\ShopwareSdk\Data\Entity\OrderAddress\OrderAddressEntity;
 
@@ -34,10 +35,10 @@ final class AddressFactory implements AddressFactoryInterface
         }
 
         $phoneNumber = $orderAddress->phoneNumber;
-        $this->isPhoneNumberValid($phoneNumber);
+        $this->throwOnConstraintValidation($phoneNumber, new IsPhoneNumber());
 
         $postalCode = $orderAddress->zipcode;
-        $this->isPostalCodeValid($postalCode);
+        $this->throwOnConstraintValidation($postalCode, new IsPostalCode());
 
         $address = new Address();
         $address->setName($orderAddress->firstName . ' ' . $orderAddress->lastName);
@@ -52,19 +53,11 @@ final class AddressFactory implements AddressFactoryInterface
         return $address;
     }
 
-    private function isPhoneNumberValid(?string $phoneNumber): void
+    private function throwOnConstraintValidation(string $value, Constraint $constraint): void
     {
-        $phoneNumberValidator = $this->validator->validate($phoneNumber, new IsPhoneNumber());
-        if (0 !== $phoneNumberValidator->count()) {
-            throw new OrderAddressException((string) $phoneNumberValidator->get(0)->getMessage());
-        }
-    }
-
-    private function isPostalCodeValid(string $postalCode): void
-    {
-        $postalCodeValidator = $this->validator->validate($postalCode, new IsPostalCode());
-        if (0 !== $postalCodeValidator->count()) {
-            throw new OrderAddressException((string) $postalCodeValidator->get(0)->getMessage());
+        $violationList = $this->validator->validate($value, $constraint);
+        if (0 !== $violationList->count()) {
+            throw new OrderAddressException((string) $violationList->get(0)->getMessage());
         }
     }
 }
