@@ -8,6 +8,8 @@ use BitBag\PPClient\Model\Address;
 use BitBag\ShopwarePocztaPolskaApp\Factory\Package\AddressFactory;
 use BitBag\ShopwarePocztaPolskaApp\Service\StreetSplitterInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Vin\ShopwareSdk\Data\Entity\OrderAddress\OrderAddressEntity;
 
 final class AddressFactoryTest extends TestCase
@@ -18,6 +20,8 @@ final class AddressFactoryTest extends TestCase
         $streetSplitter
             ->method('splitStreet')
             ->willReturn(['Jasna 4/5', 'Jasna', '4/5']);
+        $validator = $this->createMock(ValidatorInterface::class);
+        $validator->method('validate')->willReturn(new ConstraintViolationList());
 
         $orderAddressEntity = new OrderAddressEntity();
         $orderAddressEntity->firstName = 'Jan';
@@ -37,7 +41,10 @@ final class AddressFactoryTest extends TestCase
         $address->setMobileNumber('500-000-000');
         $address->setEmail('email@test.com');
 
-        $addressFactory = new AddressFactory($streetSplitter);
+        $addressFactory = new AddressFactory(
+            $streetSplitter,
+            $validator
+        );
 
         $this->assertEquals(
             $address,
