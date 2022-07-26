@@ -4,41 +4,39 @@ declare(strict_types=1);
 
 namespace BitBag\ShopwarePocztaPolskaApp\Tests\Validator;
 
-use BitBag\ShopwarePocztaPolskaApp\Validator\IsPhoneNumber;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class PhoneNumberValidatorTest extends TestCase
+final class IsPostalCodeValidatorTest extends TestCase
 {
-    public function testValidateCorrectPhoneNumber(): void
+    public function testValidateCorrectPostalCode(): void
     {
         $validator = $this->createMock(ValidatorInterface::class);
         $validator->method('validate')->willReturn(new ConstraintViolationList());
 
         self::assertEquals(
             0,
-            $validator->validate('500-000-000', new IsPhoneNumber())->count()
+            $validator->validate('02-495')->count()
         );
     }
 
-    public function testValidateIncorrectPhoneNumber(): void
+    public function testValidateIncorrectPostalCode(): void
     {
         $validator = $this->createMock(ValidatorInterface::class);
         $constraintViolation = new ConstraintViolation(
-            'bitbag.shopware_poczta_polska_app.order.address.phone_number_invalid',
-            'bitbag.shopware_poczta_polska_app.order.address.phone_number_invalid',
+            'bitbag.shopware_poczta_polska_app.order.address.post_code_invalid',
+            'bitbag.shopware_poczta_polska_app.order.address.post_code_invalid',
             [],
-            '12345678900',
+            '002495',
             '',
-            '12345678900'
+            '002495'
         );
         $validator->method('validate')->willReturn(new ConstraintViolationList([$constraintViolation]));
-
         self::assertEquals(
             1,
-            $validator->validate('12345678900')->count()
+            $validator->validate('002495')->count()
         );
     }
 }
