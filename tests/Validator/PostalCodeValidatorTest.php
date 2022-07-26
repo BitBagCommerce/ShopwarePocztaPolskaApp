@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace BitBag\ShopwarePocztaPolskaApp\Tests\Validator;
 
-use BitBag\ShopwarePocztaPolskaApp\Validator\PostalCodeValidator;
 use PHPUnit\Framework\TestCase;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PostalCodeValidatorTest extends TestCase
 {
     public function testValidateCorrectPostalCode(): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('trans')
-                   ->willReturn('foo');
-        $validator = new PostalCodeValidator($translator);
+        $validator = $this->createMock(ValidatorInterface::class);
+        $validator->method('validate')->willReturn(new ConstraintViolationList());
+
         self::assertEquals(
             0,
             $validator->validate('02-495')->count()
@@ -24,10 +24,16 @@ final class PostalCodeValidatorTest extends TestCase
 
     public function testValidateIncorrectPostalCode(): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('trans')
-                   ->willReturn('foo');
-        $validator = new PostalCodeValidator($translator);
+        $validator = $this->createMock(ValidatorInterface::class);
+        $constraintViolation = new ConstraintViolation(
+            'bitbag.shopware_poczta_polska_app.order.address.post_code_invalid',
+            'bitbag.shopware_poczta_polska_app.order.address.post_code_invalid',
+            [],
+            '002495',
+            '',
+            '002495'
+        );
+        $validator->method('validate')->willReturn(new ConstraintViolationList([$constraintViolation]));
         self::assertEquals(
             1,
             $validator->validate('002495')->count()

@@ -7,16 +7,16 @@ namespace BitBag\ShopwarePocztaPolskaApp\Factory\Package;
 use BitBag\PPClient\Model\Address;
 use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderAddressException;
 use BitBag\ShopwarePocztaPolskaApp\Service\StreetSplitterInterface;
-use BitBag\ShopwarePocztaPolskaApp\Validator\PhoneNumberValidatorInterface;
-use BitBag\ShopwarePocztaPolskaApp\Validator\PostalCodeValidatorInterface;
+use BitBag\ShopwarePocztaPolskaApp\Validator\IsPhoneNumber;
+use BitBag\ShopwarePocztaPolskaApp\Validator\IsPostalCode;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Vin\ShopwareSdk\Data\Entity\OrderAddress\OrderAddressEntity;
 
 final class AddressFactory implements AddressFactoryInterface
 {
     public function __construct(
         private StreetSplitterInterface $streetSplitter,
-        private PhoneNumberValidatorInterface $phoneNumberValidator,
-        private PostalCodeValidatorInterface $postalCodeValidator
+        private ValidatorInterface $validator
     ) {
     }
 
@@ -34,13 +34,16 @@ final class AddressFactory implements AddressFactoryInterface
         }
 
         $phoneNumber = $orderAddress->phoneNumber;
-        $phoneNumberValidator = $this->phoneNumberValidator->validate($phoneNumber);
+        $phoneNumberValidator = $this->validator->validate($phoneNumber, new IsPhoneNumber());
         if (0 !== $phoneNumberValidator->count()) {
             throw new OrderAddressException((string) $phoneNumberValidator->get(0)->getMessage());
         }
 
         $postalCode = $orderAddress->zipcode;
-        $this->checkPostCodeValidity($postalCode);
+        $postalCodeValidator = $this->validator->validate($postalCode, new IsPostalCode());
+        if (0 !== $postalCodeValidator->count()) {
+            throw new OrderAddressException((string) $postalCodeValidator->get(0)->getMessage());
+        }
 
         $address = new Address();
         $address->setName($orderAddress->firstName . ' ' . $orderAddress->lastName);
@@ -53,17 +56,5 @@ final class AddressFactory implements AddressFactoryInterface
         $address->setMobileNumber($phoneNumber);
 
         return $address;
-    }
-
-    private function checkPostCodeValidity(string $postalCode): void
-    {
-        $postalCodeValidator = $this->postalCodeValidator->validate($postalCode);
-        if (0 !== $postalCodeValidator->count()) {
-            $postalCode = trim(substr_replace($postalCode, '-', 2, 0));
-            $postalCodeValidator = $this->postalCodeValidator->validate($postalCode);
-            if (0 !== $postalCodeValidator->count()) {
-                throw new OrderAddressException((string) $postalCodeValidator->get(0)->getMessage());
-            }
-        }
     }
 }
