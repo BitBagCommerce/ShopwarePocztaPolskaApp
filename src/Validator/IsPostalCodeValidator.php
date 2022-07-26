@@ -14,16 +14,14 @@ final class IsPostalCodeValidator extends ConstraintValidator
 
     public function validate($value, Constraint $constraint): void
     {
-        $isValid = $this->isValid($value);
-
         if (!$constraint instanceof IsPostalCode) {
             throw new UnexpectedTypeException($constraint, IsPostalCode::class);
         }
 
-        if (false === $isValid) {
+        $isValid = $this->isValid($value);
+        if (!$isValid) {
             $postalCode = trim(substr_replace($value, '-', 2, 0));
-
-            if (true === $this->isValid($postalCode)) {
+            if ($this->isValid($postalCode)) {
                 return;
             }
 

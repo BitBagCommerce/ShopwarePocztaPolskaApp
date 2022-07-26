@@ -8,7 +8,7 @@
 
         <service id="BitBag\ShopwarePocztaPolskaApp\Factory\Package\AddressFactory">
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Service\StreetSplitter" />
-            <argument type="service" id="Symfony\Component\Validator\Validator\ValidatorInterface" />
+            <argument type="service" id="validator" />
         </service>
 
         <service id="BitBag\ShopwarePocztaPolskaApp\Factory\Package\PostalPackageFactory">

@@ -9,9 +9,4 @@ use Symfony\Component\Validator\Constraint;
 final class IsPostalCode extends Constraint
 {
     public string $message = '';
-
-    public function validatedBy(): string
-    {
-        return static::class . 'Validator';
-    }
 }

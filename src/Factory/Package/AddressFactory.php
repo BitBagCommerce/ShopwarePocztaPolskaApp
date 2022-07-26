@@ -34,16 +34,10 @@ final class AddressFactory implements AddressFactoryInterface
         }
 
         $phoneNumber = $orderAddress->phoneNumber;
-        $phoneNumberValidator = $this->validator->validate($phoneNumber, new IsPhoneNumber());
-        if (0 !== $phoneNumberValidator->count()) {
-            throw new OrderAddressException((string) $phoneNumberValidator->get(0)->getMessage());
-        }
+        $this->isPhoneNumberValid($phoneNumber);
 
         $postalCode = $orderAddress->zipcode;
-        $postalCodeValidator = $this->validator->validate($postalCode, new IsPostalCode());
-        if (0 !== $postalCodeValidator->count()) {
-            throw new OrderAddressException((string) $postalCodeValidator->get(0)->getMessage());
-        }
+        $this->isPostalCodeValid($postalCode);
 
         $address = new Address();
         $address->setName($orderAddress->firstName . ' ' . $orderAddress->lastName);
@@ -56,5 +50,21 @@ final class AddressFactory implements AddressFactoryInterface
         $address->setMobileNumber($phoneNumber);
 
         return $address;
+    }
+
+    private function isPhoneNumberValid(?string $phoneNumber): void
+    {
+        $phoneNumberValidator = $this->validator->validate($phoneNumber, new IsPhoneNumber());
+        if (0 !== $phoneNumberValidator->count()) {
+            throw new OrderAddressException((string) $phoneNumberValidator->get(0)->getMessage());
+        }
+    }
+
+    private function isPostalCodeValid(string $postalCode): void
+    {
+        $postalCodeValidator = $this->validator->validate($postalCode, new IsPostalCode());
+        if (0 !== $postalCodeValidator->count()) {
+            throw new OrderAddressException((string) $postalCodeValidator->get(0)->getMessage());
+        }
     }
 }

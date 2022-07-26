@@ -5,7 +5,5 @@
         <service id="BitBag\ShopwarePocztaPolskaApp\Validator\OrderCustomFieldValidator">
             <argument type="service" id="translator" />
         </service>
-
-        <service id="BitBag\ShopwarePocztaPolskaApp\Validator\IsPhoneNumberValidator" />
     </services>
 </container>
