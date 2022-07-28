@@ -5,5 +5,9 @@
         <service id="BitBag\ShopwarePocztaPolskaApp\Finder\SalesChannelFinder">
             <argument type="service" id="shopware.repository.sales_channel" />
         </service>
+
+        <service id="BitBag\ShopwarePocztaPolskaApp\Finder\OrderFinder">
+            <argument type="service" id="shopware.repository.order" />
+        </service>
     </services>
 </container>

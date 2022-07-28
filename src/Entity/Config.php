@@ -60,9 +60,9 @@ class Config implements ConfigInterface
         $this->apiEnvironment = $apiEnvironment;
     }
 
-    public function getOriginOffice(): ?string
+    public function getOriginOffice(): ?int
     {
-        return $this->originOffice;
+        return $this->originOffice ? (int) $this->originOffice : null;
     }
 
     public function setOriginOffice(?string $originOffice): void

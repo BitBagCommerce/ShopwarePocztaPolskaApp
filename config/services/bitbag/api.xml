@@ -1,0 +1,15 @@
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="BitBag\ShopwarePocztaPolskaApp\Api\PackageApiService">
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Factory\Package\AddressFactory" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Factory\Package\PostalPackageFactory" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolver" />
+        </service>
+
+        <service id="BitBag\ShopwarePocztaPolskaApp\Api\DocumentApiService">
+            <argument type="service" id="bitbag.shopware_app_system.service.document_service" />
+        </service>
+    </services>
+</container>

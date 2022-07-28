@@ -28,5 +28,17 @@
 
             <tag name="controller.service_arguments" />
         </service>
+
+        <service id="BitBag\ShopwarePocztaPolskaApp\Controller\CreatePackageController">
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Finder\OrderFinder" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Factory\FeedbackResponseFactory" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolver" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Api\PackageApiService" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepository" />
+            <argument type="service" id="shopware.repository.order_delivery" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Api\DocumentApiService" />
+
+            <tag name="controller.service_arguments" />
+        </service>
     </services>
 </container>

@@ -39,6 +39,7 @@ bitbag:
             notification_message_success: 'Provided data is valid'
             notification_message_error: 'Provided data is not valid'
             origin_offices:
+                empty: 'Please select origin office in configuration first (Settings -> Polish post - Configuration)'
                 valid_credentials_first: 'Origin offices will be available after a valid API configuration has been provided'
         package:
             already_created: 'A package has already been created'

@@ -26,7 +26,7 @@ interface ConfigInterface
 
     public function setApiEnvironment(string $apiEnvironment): void;
 
-    public function getOriginOffice(): ?string;
+    public function getOriginOffice(): ?int;
 
     public function setOriginOffice(?string $originOffice): void;
 

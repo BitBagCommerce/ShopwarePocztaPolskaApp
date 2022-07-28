@@ -10,3 +10,8 @@ config:
   methods: ['GET']
   path: /app/config
   controller: BitBag\ShopwarePocztaPolskaApp\Controller\ConfigController
+
+create_package:
+  methods: ['POST']
+  path: /app/create-package
+  controller: BitBag\ShopwarePocztaPolskaApp\Controller\CreatePackageController::create
