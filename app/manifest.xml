@@ -3,7 +3,7 @@
           xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/Framework/App/Manifest/Schema/manifest-1.0.xsd">
     <meta>
         <name>BitBagShopwarePocztaPolskaApp</name>
-        <label>Polish Post</label>
+        <label>Poczta Polska</label>
         <label lang="pl-PL">Poczta Polska</label>
         <description>BitBag Shopware app for Polish Post</description>
         <description lang="pl-PL">Aplikacja umożliwiająca tworzenie przesyłek z Pocztą Polską dla platformy Shopware</description>
@@ -20,6 +20,9 @@
 
     <permissions>
         <read>delivery_time</read>
+        <read>document_type</read>
+        <create>document</create>
+        <update>document</update>
         <read>order</read>
         <read>order_address</read>
         <read>order_delivery</read>
@@ -38,6 +41,66 @@
         <update>shipping_method</update>
         <create>shipping_method_price</create>
     </permissions>
+
+    <admin>
+        <action-button action="getLabel" entity="order" view="detail" url="http://example-app2/app/get-label">
+            <label>Get label (Poczta Polska)</label>
+            <label lang="pl-PL">Pobierz etykietę (Poczta Polska)</label>
+        </action-button>
+
+        <action-button action="createPackage" entity="order" view="detail" url="http://example-app2/app/create-package">
+            <label>Create package (Poczta Polska)</label>
+            <label lang="pl-PL">Utwórz paczkę (Poczta Polska)</label>
+        </action-button>
+
+        <module name="poczta_polska_configuration"
+                source="http://localhost:7760/app/module/configuration"
+                parent="sw-settings"
+        >
+            <label>Poczta Polska - Configuration</label>
+            <label lang="pl-PL">Poczta Polska - Konfiguracja</label>
+        </module>
+    </admin>
+
+    <custom-fields>
+        <custom-field-set>
+            <name>bitbag_shopware_poczta_polska_app_package_details</name>
+            <label>Package details (Poczta Polska)</label>
+            <label lang="pl-PL">Szczegóły paczki (Poczta Polska)</label>
+
+            <related-entities>
+                <order/>
+            </related-entities>
+            <fields>
+                <int name="bitbag_shopware_poczta_polska_app_package_details_height">
+                    <position>1</position>
+                    <label>Height (cm) *</label>
+                    <label lang="pl-PL">Wysokość (cm) *</label>
+                </int>
+                <int name="bitbag_shopware_poczta_polska_app_package_details_width">
+                    <position>2</position>
+                    <label>Width (cm) *</label>
+                    <label lang="pl-PL">Szerokość (cm) *</label>
+                </int>
+                <int name="bitbag_shopware_poczta_polska_app_package_details_depth">
+                    <position>3</position>
+                    <label>Depth (cm) *</label>
+                    <label lang="pl-PL">Głębokość (cm) *</label>
+                </int>
+                <text name="bitbag_shopware_poczta_polska_app_package_details_package_contents">
+                    <position>4</position>
+                    <label>Package contents *</label>
+                    <label lang="pl-PL">Zawartość paczki *</label>
+                </text>
+                <text name="bitbag_shopware_poczta_polska_app_package_details_planned_shipping_date">
+                    <position>5</position>
+                    <label>Shipment date *</label>
+                    <label lang="pl-PL">Data nadania *</label>
+                    <placeholder>(YYYY-MM-DD)</placeholder>
+                </text>
+            </fields>
+        </custom-field-set>
+    </custom-fields>
 
     <webhooks>
         <webhook name="appLifecycleDeleted" url="http://example-app2/app/lifecycle/deleted" event="app.deleted" />
