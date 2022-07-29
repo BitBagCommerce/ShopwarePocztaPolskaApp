@@ -91,7 +91,7 @@ final class LabelController extends AbstractController
             $context
         );
 
-        $filename = sprintf('filename="label_%s.pdf"', 'order_' . $orderId);
+        $filename = sprintf('filename="label_%s.pdf"', 'order_' . $order->orderNumber);
 
         $response = new Response($labelContent);
         $response->headers->set('Content-Type', 'application/pdf');
