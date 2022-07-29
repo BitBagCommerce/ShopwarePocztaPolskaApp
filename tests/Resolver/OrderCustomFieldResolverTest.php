@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace BitBag\ShopwarePocztaPolskaApp\Tests\Resolver;
 
-use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderCustomFieldException;
 use BitBag\ShopwarePocztaPolskaApp\Model\OrderCustomFieldModel;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolver;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolverInterface;
 use BitBag\ShopwarePocztaPolskaApp\Validator\OrderCustomFieldValidatorInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validation;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
 
 final class OrderCustomFieldResolverTest extends TestCase
@@ -40,12 +41,25 @@ final class OrderCustomFieldResolverTest extends TestCase
     {
         $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.order.custom_fields.depth_invalid');
 
-        $order = new OrderEntity();
-        $order->setCustomFields([]);
+        $validator = Validation::createValidatorBuilder()->getValidator();
+
+        $constraint = new Length(
+            null,
+            1,
+            null,
+            null,
+            null,
+            null,
+            'bitbag.shopware_poczta_polska_app.order.custom_fields.depth_invalid'
+        );
 
         $orderCustomFieldValidator = $this->createMock(OrderCustomFieldValidatorInterface::class);
         $orderCustomFieldValidator->method('validate')
-                                  ->willThrowException(new OrderCustomFieldException('bitbag.shopware_poczta_polska_app.order.custom_fields.depth_invalid'));
+                                  ->willReturn($validator->validate('', $constraint));
+
+        $order = new OrderEntity();
+        $order->setCustomFields([]);
+
         $orderCustomFieldResolver = new OrderCustomFieldResolver($orderCustomFieldValidator);
         $orderCustomFieldResolver->resolve($order);
     }
