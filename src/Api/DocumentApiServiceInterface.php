@@ -9,7 +9,7 @@ use Vin\ShopwareSdk\Data\Context;
 
 interface DocumentApiServiceInterface
 {
-    public function addLabelToOrderDocument(
+    public function uploadOrderLabel(
         string $packageGuid,
         string $orderId,
         string $orderNumber,

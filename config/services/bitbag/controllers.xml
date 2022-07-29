@@ -35,8 +35,10 @@
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolver" />
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Api\PackageApiService" />
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepository" />
-            <argument type="service" id="shopware.repository.order_delivery" />
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Api\DocumentApiService" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Validator\OrderValidator" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Validator\ConfigValidator" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Api\OrderDeliveryApiService" />
 
             <tag name="controller.service_arguments" />
         </service>

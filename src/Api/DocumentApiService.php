@@ -16,7 +16,7 @@ final class DocumentApiService implements DocumentApiServiceInterface
     {
     }
 
-    public function addLabelToOrderDocument(
+    public function uploadOrderLabel(
         string $packageGuid,
         string $orderId,
         string $orderNumber,
@@ -42,7 +42,7 @@ final class DocumentApiService implements DocumentApiServiceInterface
 
         $this->documentService->uploadDocument(
             $documentId,
-            "bitbag_shopware_poczta_polska_app_$orderNumber" . time(),
+            "bitbag_shopware_poczta_polska_app_$orderNumber",
             $labelContent,
             $context,
             'pdf'

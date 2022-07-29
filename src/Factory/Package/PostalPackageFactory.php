@@ -10,11 +10,13 @@ use BitBag\PPClient\Model\CODShipment;
 use BitBag\PPClient\Model\PostalPackage;
 use BitBag\PPClient\Model\RecordedDelivery;
 use BitBag\ShopwarePocztaPolskaApp\Calculator\OrderWeightCalculatorInterface;
+use BitBag\ShopwarePocztaPolskaApp\Provider\Guid;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolverInterface;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\PackageSizeResolverInterface;
 use DateTime;
 use Vin\ShopwareSdk\Data\Context;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
+use Vin\ShopwareSdk\Data\Entity\PaymentMethod\PaymentMethodEntity;
 
 final class PostalPackageFactory implements PostalPackageFactoryInterface
 {
@@ -34,7 +36,7 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
         Context $context
     ): RecordedDelivery {
         $customFields = $this->orderCustomFieldResolver->resolve($order);
-        $guid = $this->getGuid();
+        $guid = Guid::generate();
         $packageSize = $this->packageSizeResolver->resolve(
             $customFields->getDepth(),
             $customFields->getHeight(),
@@ -45,7 +47,9 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
         $weight = $this->orderWeightCalculator->calculate($order, $context);
         $totalAmount = (int) ($order->amountTotal * 100);
 
-        $package = $this->isOrderCashOnDelivery($order) ? new CODShipment() : new PostalPackage();
+        $paymentMethod = $order->transactions?->first()?->paymentMethod;
+
+        $package = $this->isOrderCashOnDelivery($paymentMethod) ? new CODShipment() : new PostalPackage();
         $package->setGuid($guid);
         $package->setAddress($address);
         $package->setCategory(RecordedDelivery::CATEGORY_PRIORITY);
@@ -57,7 +61,7 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
         $package->setPackagingGuid($guid);
         $package->setDescription($description);
 
-        if ($this->isOrderCashOnDelivery($order) && $package instanceof CODShipment) {
+        if ($this->isOrderCashOnDelivery($paymentMethod) && $package instanceof CODShipment) {
             $cod = new COD();
             $cod->setTotalAmount($totalAmount);
             $cod->setCodType(COD::COD_TYPE_POSTAL_ORDER);
@@ -69,14 +73,13 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
         return $package;
     }
 
-    private function getGuid(): string
+    private function isOrderCashOnDelivery(?PaymentMethodEntity $paymentMethod): bool
     {
-        return strtoupper(md5(uniqid((string) random_int(32, 32), true)));
-    }
+        if (null === $paymentMethod) {
+            return false;
+        }
 
-    private function isOrderCashOnDelivery(OrderEntity $order): bool
-    {
-        $orderPaymentMethodHandlerIdentifier = $order->transactions?->first()?->paymentMethod?->handlerIdentifier;
+        $orderPaymentMethodHandlerIdentifier = $paymentMethod->handlerIdentifier;
 
         return self::CASH_PAYMENT_CLASS === $orderPaymentMethodHandlerIdentifier;
     }

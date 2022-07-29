@@ -6,37 +6,41 @@ namespace BitBag\ShopwarePocztaPolskaApp\Controller;
 
 use BitBag\ShopwareAppSystemBundle\Model\Action\ActionInterface;
 use BitBag\ShopwarePocztaPolskaApp\Api\DocumentApiServiceInterface;
+use BitBag\ShopwarePocztaPolskaApp\Api\OrderDeliveryApiServiceInterface;
 use BitBag\ShopwarePocztaPolskaApp\Api\PackageApiServiceInterface;
+use BitBag\ShopwarePocztaPolskaApp\Entity\ConfigInterface;
 use BitBag\ShopwarePocztaPolskaApp\Exception\ConfigException;
 use BitBag\ShopwarePocztaPolskaApp\Exception\ConfigNotFoundException;
 use BitBag\ShopwarePocztaPolskaApp\Exception\LabelException;
 use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderAddressException;
 use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderException;
+use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderShippingMethodException;
 use BitBag\ShopwarePocztaPolskaApp\Exception\PackageException;
 use BitBag\ShopwarePocztaPolskaApp\Exception\StreetCannotBeSplitException;
 use BitBag\ShopwarePocztaPolskaApp\Factory\FeedbackResponseFactoryInterface;
 use BitBag\ShopwarePocztaPolskaApp\Finder\OrderFinderInterface;
-use BitBag\ShopwarePocztaPolskaApp\Provider\Defaults;
 use BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepositoryInterface;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolverInterface;
+use BitBag\ShopwarePocztaPolskaApp\Validator\ConfigValidatorInterface;
+use BitBag\ShopwarePocztaPolskaApp\Validator\OrderValidatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Vin\ShopwareSdk\Data\Context;
-use Vin\ShopwareSdk\Data\Criteria;
-use Vin\ShopwareSdk\Data\Entity\OrderDelivery\OrderDeliveryEntity;
-use Vin\ShopwareSdk\Data\Filter\EqualsFilter;
 use Vin\ShopwareSdk\Factory\RepositoryFactory;
-use Vin\ShopwareSdk\Repository\RepositoryInterface;
 
 final class CreatePackageController
 {
+    public const SHIPPING_KEY = 'Poczta Polska';
+
     public function __construct(
         private OrderFinderInterface $orderFinder,
         private FeedbackResponseFactoryInterface $feedbackResponseFactory,
         private ApiResolverInterface $apiResolver,
         private PackageApiServiceInterface $packageApiService,
         private ConfigRepositoryInterface $configRepository,
-        private RepositoryInterface $orderDeliveryRepository,
-        private DocumentApiServiceInterface $documentApiService
+        private DocumentApiServiceInterface $documentApiService,
+        private OrderValidatorInterface $orderValidator,
+        private ConfigValidatorInterface $configValidator,
+        private OrderDeliveryApiServiceInterface $orderDeliveryApiService
     ) {
     }
 
@@ -45,44 +49,32 @@ final class CreatePackageController
         $orderId = $action->getData()->getIds()[0] ?? null;
         $shopId = $action->getSource()->getShopId();
 
+        $order = $this->orderFinder->getWithAssociations($orderId, $context);
+
         try {
-            $order = $this->orderFinder->getWithAssociations($orderId, $context);
-        } catch (OrderException $e) {
+            $this->orderValidator->validate(
+                $shopId,
+                $order,
+                $context
+            );
+        } catch (OrderShippingMethodException | ConfigException | ConfigNotFoundException | OrderException $e) {
             return $this->feedbackResponseFactory->createError($e->getMessage());
         }
 
-        $shippingMethod = $order->deliveries?->first()?->shippingMethod ?? null;
-        if (null === $shippingMethod) {
-            return $this->feedbackResponseFactory->createError(
-                'bitbag.shopware_poczta_polska_app.order.shipping_method.not_found'
-            );
-        }
-
-        $technicalName = $shippingMethod->getTranslated()['customFields']['technical_name'] ?? null;
-        if (Defaults::SHIPPING_KEY !== $technicalName) {
-            return $this->feedbackResponseFactory->createError(
-                'bitbag.shopware_poczta_polska_app.order.shipping_method.not_polish_post'
-            );
-        }
+        /** @var ConfigInterface $config */
+        $config = $this->configRepository->findByShopIdAndSalesChannelId($shopId, $order->salesChannelId);
 
         try {
-            $config = $this->configRepository->getByShopIdAndSalesChannelId($shopId, $order->salesChannelId);
-        } catch (ConfigException | ConfigNotFoundException $e) {
+            $this->configValidator->validate($config);
+        } catch (ConfigException $e) {
             return $this->feedbackResponseFactory->createError($e->getMessage());
         }
 
-        if (null === $config->getOriginOffice()) {
-            return $this->feedbackResponseFactory->createError('bitbag.shopware_poczta_polska_app.config.origin_offices.empty');
+        try {
+            $client = $this->apiResolver->getClient($shopId, $order->salesChannelId);
+        } catch (ConfigNotFoundException $e) {
+            return $this->feedbackResponseFactory->createError($e->getMessage());
         }
-
-        $packageRepository = RepositoryFactory::create('custom_entity_bitbag_shopware_poczta_polska_app_packages');
-        $packageCriteria = (new Criteria())->addFilter(new EqualsFilter('order.id', $orderId));
-        $package = $packageRepository->searchIds($packageCriteria, $context);
-        if (0 !== $package->getTotal()) {
-            return $this->feedbackResponseFactory->createError('bitbag.shopware_poczta_polska_app.package.already_created');
-        }
-
-        $client = $this->apiResolver->getClient($shopId, $order->salesChannelId);
 
         try {
             $package = $this->packageApiService->createPackage(
@@ -91,12 +83,12 @@ final class CreatePackageController
                 $context,
                 $client
             );
-        } catch (StreetCannotBeSplitException | OrderAddressException | PackageException | ConfigNotFoundException $e) {
+        } catch (StreetCannotBeSplitException | OrderAddressException | PackageException $e) {
             return $this->feedbackResponseFactory->createError($e->getMessage());
         }
 
         try {
-            $this->documentApiService->addLabelToOrderDocument(
+            $this->documentApiService->uploadOrderLabel(
                 $package->getGuid(),
                 $orderId,
                 $order->orderNumber,
@@ -117,23 +109,23 @@ final class CreatePackageController
             return $this->feedbackResponseFactory->createError($e->getMessage());
         }
 
-        $this->saveDataToEntity(
+        $this->saveDataToCustomEntity(
             $package->getGuid(),
             $package->getShippingNumber(),
             $orderId,
             $context
         );
 
-        $this->addTrackingCodeToOrderDelivery(
-            $order->deliveries?->first(),
+        $this->orderDeliveryApiService->addTrackingCode(
             $package->getShippingNumber(),
+            $order->deliveries?->first(),
             $context
         );
 
         return $this->feedbackResponseFactory->createSuccess('bitbag.shopware_poczta_polska_app.package.created');
     }
 
-    private function saveDataToEntity(
+    private function saveDataToCustomEntity(
         string $guid,
         string $trackingCode,
         string $orderId,
@@ -146,20 +138,5 @@ final class CreatePackageController
             'orderNumber' => $trackingCode,
             'orderId' => $orderId,
         ], $context);
-    }
-
-    private function addTrackingCodeToOrderDelivery(
-        ?OrderDeliveryEntity $orderDelivery,
-        string $trackingCode,
-        Context $context
-    ): void {
-        $trackingCodes = $orderDelivery->trackingCodes ?? [];
-
-        if (null !== $orderDelivery && !in_array($trackingCode, $trackingCodes)) {
-            $this->orderDeliveryRepository->update([
-                'id' => $orderDelivery->id,
-                'trackingCodes' => array_merge($trackingCodes, [$trackingCode]),
-            ], $context);
-        }
     }
 }
