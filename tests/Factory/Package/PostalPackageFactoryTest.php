@@ -90,7 +90,7 @@ final class PostalPackageFactoryTest extends TestCase
         ];
     }
 
-    public function getCustomFieldsModel(): OrderCustomFieldModel
+    private function getCustomFieldsModel(): OrderCustomFieldModel
     {
         return new OrderCustomFieldModel(
             self::DEPTH,
