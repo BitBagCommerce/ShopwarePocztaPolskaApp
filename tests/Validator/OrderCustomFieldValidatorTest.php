@@ -27,11 +27,11 @@ final class OrderCustomFieldValidatorTest extends TestCase
     public function provideData(): array
     {
         return [
-           [OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY.'_depth', 'foo'],
-           [OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY.'_height', 'foo'],
-           [OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY.'_width', 'foo'],
-           [OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY.'_package_contents', 'foo'],
-           [OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY.'_planned_shipping_date', 'foo'],
+           [OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY . '_depth', 'foo'],
+           [OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY . '_height', 'foo'],
+           [OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY . '_width', 'foo'],
+           [OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY . '_package_contents', 'foo'],
+           [OrderCustomFieldResolverInterface::PACKAGE_DETAILS_KEY . '_planned_shipping_date', 'foo'],
         ];
     }
 }
