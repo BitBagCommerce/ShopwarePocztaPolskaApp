@@ -6,7 +6,7 @@ bitbag:
                 invalid_street: 'Invalid street value'
             shipping_method:
                 not_found: 'Shipping method was not found'
-                not_polish_post: 'Selected shipping method is not Polish post'
+                not_polish_post: 'Selected shipping method is not Poczta Polska'
             fill_required_custom_fields: 'Fill in all required package details before creating the package (package contents is also required)'
             custom_fields:
                 depth_invalid: 'Custom field depth is invalid'
@@ -32,13 +32,14 @@ bitbag:
             saved: 'Successfully saved'
             sandbox_environment: 'Sandbox'
             production_environment: 'Production'
-            not_found: 'Add configuration first (Settings -> Polish post - Configuration)'
+            not_found: 'Add configuration first (Settings -> Poczta Polska - Configuration)'
             check_credentials: 'Check credentials (API)'
             notification_label_success: 'Success'
             notification_label_error: 'Error'
             notification_message_success: 'Provided data is valid'
             notification_message_error: 'Provided data is not valid'
             origin_offices:
+                empty: 'Please select an origin office in the plugin configuration first (Settings -> Poczta Polska - Configuration)'
                 valid_credentials_first: 'Origin offices will be available after a valid API configuration has been provided'
         package:
             already_created: 'A package has already been created'

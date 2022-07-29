@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace BitBag\ShopwarePocztaPolskaApp\Exception;
 
-final class ConfigNotFoundException extends \Exception
+final class ConfigException extends \Exception
 {
 }

@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace BitBag\ShopwarePocztaPolskaApp\Factory\Package;
 
 use BitBag\PPClient\Model\Address;
+use BitBag\PPClient\Model\COD;
+use BitBag\PPClient\Model\CODShipment;
 use BitBag\PPClient\Model\PostalPackage;
 use BitBag\PPClient\Model\RecordedDelivery;
 use BitBag\ShopwarePocztaPolskaApp\Calculator\OrderWeightCalculatorInterface;
+use BitBag\ShopwarePocztaPolskaApp\Guid\Guid;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderCustomFieldResolverInterface;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\PackageSizeResolverInterface;
 use DateTime;
 use Vin\ShopwareSdk\Data\Context;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
+use Vin\ShopwareSdk\Data\Entity\PaymentMethod\PaymentMethodEntity;
 
 final class PostalPackageFactory implements PostalPackageFactoryInterface
 {
@@ -30,9 +34,9 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
         OrderEntity $order,
         Address $address,
         Context $context
-    ): PostalPackage {
+    ): RecordedDelivery {
         $customFields = $this->orderCustomFieldResolver->resolve($order);
-        $guid = $this->getGuid();
+        $guid = Guid::generate();
         $packageSize = $this->packageSizeResolver->resolve(
             $customFields->getDepth(),
             $customFields->getHeight(),
@@ -40,26 +44,43 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
         );
         $plannedShippingDate = $customFields->getPlannedShippingDate();
         $description = $customFields->getPackageContents();
-
         $weight = $this->orderWeightCalculator->calculate($order, $context);
+        $totalAmount = (int) ($order->amountTotal * 100);
 
-        $package = new PostalPackage();
+        $paymentMethod = $order->transactions?->first()?->paymentMethod;
+
+        $package = $this->isCashOnDelivery($paymentMethod) ? new CODShipment() : new PostalPackage();
         $package->setGuid($guid);
         $package->setAddress($address);
         $package->setCategory(RecordedDelivery::CATEGORY_PRIORITY);
         $package->setPackageSize($packageSize);
         $package->setPlannedShippingDate(new DateTime($plannedShippingDate));
         $package->setWeight((int) round($weight));
-        $package->setTotalAmount((int) (round($order->amountTotal) * 100));
+        $package->setTotalAmount($totalAmount);
         $package->setPacketGuid($guid);
         $package->setPackagingGuid($guid);
         $package->setDescription($description);
 
+        if ($this->isCashOnDelivery($paymentMethod) && $package instanceof CODShipment) {
+            $cod = new COD();
+            $cod->setTotalAmount($totalAmount);
+            $cod->setCodType(COD::COD_TYPE_POSTAL_ORDER);
+            $cod->setToBeCheckedByReceiver(false);
+
+            $package->setCod($cod);
+        }
+
         return $package;
     }
 
-    private function getGuid(): string
+    private function isCashOnDelivery(?PaymentMethodEntity $paymentMethod): bool
     {
-        return strtoupper(md5(uniqid((string) random_int(32, 32), true)));
+        if (null === $paymentMethod) {
+            return false;
+        }
+
+        $orderPaymentMethodHandlerIdentifier = $paymentMethod->handlerIdentifier;
+
+        return self::CASH_PAYMENT_CLASS === $orderPaymentMethodHandlerIdentifier;
     }
 }

@@ -11,5 +11,15 @@
         <service id="BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolver">
                 <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepository" />
         </service>
+
+        <service id="BitBag\ShopwarePocztaPolskaApp\Resolver\OrderResolver">
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Finder\OrderFinder" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Validator\OrderValidator" />
+        </service>
+
+        <service id="BitBag\ShopwarePocztaPolskaApp\Resolver\ConfigResolver">
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepository" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Validator\ConfigValidator" />
+        </service>
     </services>
 </container>
