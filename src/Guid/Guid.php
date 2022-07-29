@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BitBag\ShopwarePocztaPolskaApp\Provider;
+namespace BitBag\ShopwarePocztaPolskaApp\Guid;
 
 final class Guid
 {

@@ -22,11 +22,13 @@ final class PackageApiService implements PackageApiServiceInterface
         private AddressFactoryInterface $addressFactory,
         private PostalPackageFactoryInterface $postalPackageFactory,
         private ApiResolverInterface $apiResolver,
-        ) {
+        private DocumentApiServiceInterface $documentApiService
+    ) {
     }
 
     public function createPackage(
         string $shopId,
+        int $originOffice,
         OrderEntity $order,
         Context $context,
         PPClientInterface $client
@@ -52,10 +54,24 @@ final class PackageApiService implements PackageApiServiceInterface
             throw new PackageException($firstPackageResponse->getErrors()[0]->getErrorDesc());
         }
 
+        $this->documentApiService->uploadOrderLabel(
+            $package->getGuid(),
+            $order->id,
+            $order->orderNumber,
+            $client,
+            $context
+        );
+
+        $this->sendPackage(
+            $package->getGuid(),
+            $originOffice,
+            $client
+        );
+
         return $firstPackageResponse;
     }
 
-    public function sendPackage(
+    private function sendPackage(
         string $packageGuid,
         int $originOffice,
         PPClientInterface $client

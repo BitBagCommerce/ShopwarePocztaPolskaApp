@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BitBag\ShopwarePocztaPolskaApp\Tests\Validator;
 
-use BitBag\ShopwarePocztaPolskaApp\Provider\Guid;
+use BitBag\ShopwarePocztaPolskaApp\Guid\Guid;
 use BitBag\ShopwarePocztaPolskaApp\Validator\OrderValidator;
 use PHPUnit\Framework\TestCase;
 use Vin\ShopwareSdk\Data\AccessToken;
@@ -27,8 +27,6 @@ final class OrderValidatorTest extends TestCase
         $order->id = Guid::generate();
 
         $validator->validate('1234', $order, $context);
-
-        self::assertTrue(true);
     }
 
     public function testValidateEmptyTechnicalName(): void
@@ -50,7 +48,5 @@ final class OrderValidatorTest extends TestCase
         $order->deliveries = new OrderDeliveryCollection([$orderDelivery]);
 
         $validator->validate('1234', $order, $context);
-
-        self::assertTrue(true);
     }
 }

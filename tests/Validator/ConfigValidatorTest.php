@@ -12,16 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 final class ConfigValidatorTest extends TestCase
 {
-    public function testValidateCorrectConfig(): void
-    {
-        $configRepository = $this->createMock(ConfigRepositoryInterface::class);
-        $validator = new ConfigValidator($configRepository);
-
-        $validator->validate($this->createConfig());
-
-        self::assertTrue(true);
-    }
-
     public function testValidateNullConfig(): void
     {
         $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.config.not_found');
@@ -30,8 +20,6 @@ final class ConfigValidatorTest extends TestCase
         $validator = new ConfigValidator($configRepository);
 
         $validator->validate(null);
-
-        self::assertTrue(true);
     }
 
     public function testValidateNullOriginOffice(): void
@@ -45,8 +33,6 @@ final class ConfigValidatorTest extends TestCase
         $config->setOriginOffice(null);
 
         $validator->validate($config);
-
-        self::assertTrue(true);
     }
 
     private function createConfig(): Config

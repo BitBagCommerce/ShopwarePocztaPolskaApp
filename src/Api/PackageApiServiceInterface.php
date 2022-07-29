@@ -13,14 +13,9 @@ interface PackageApiServiceInterface
 {
     public function createPackage(
         string $shopId,
+        int $originOffice,
         OrderEntity $order,
         Context $context,
         PPClientInterface $client
     ): AddShipmentResponseItem;
-
-    public function sendPackage(
-        string $packageGuid,
-        int $originOffice,
-        PPClientInterface $client
-    ): void;
 }
