@@ -1,0 +1,44 @@
+bitbag:
+    shopware_poczta_polska_app:
+        order:
+            not_found: 'Zamówienie nie zostało odnalezione'
+            order_address:
+                invalid_street: 'Ulica jest niepoprawna'
+            shipping_method:
+                not_found: 'Adres wysyłki nie może być pusty'
+                not_polish_post: 'Zamówienie nie zostało złożone za pomocą Poczty Polskiej'
+            fill_required_custom_fields: 'Uzupełnij szczegóły paczki przed jej stworzeniem'
+            custom_fields:
+                depth_invalid: 'Głębokość w szczegółach paczki jest niepoprawna'
+                height_invalid: 'Wysokość w szczegółach paczki jest niepoprawna'
+                width_invalid: 'Szerokość w szczegółach paczki jest niepoprawna'
+                package_contents_invalid: 'Zawartość paczki w szczegółach paczki jest niepoprawna'
+                planned_shipping_date_invalid: 'Data nadania w szczegółach paczki jest niepoprawna'
+            products:
+                too_heavy: 'Paczka jest za ciężka (maksymalnie 10 kg)'
+                null_weight: 'Paczka musi być cięższa niż 0.0 kg'
+            address:
+                post_code_invalid: 'Kod pocztowy jest niepoprawny (poprawny format: 12-345)'
+                phone_number_invalid: 'Numer telefonu jest niepoprawny (poprawny format: 111-222-333)'
+                phone_number_empty: 'Numer telefonu nie może być pusty'
+        config:
+            sales_channel: 'Kanał sprzedaży'
+            sales_channels: 'Kanały sprzedaży'
+            api_login: 'Użytkownik API (email)'
+            api_password: 'Hasło API'
+            api_environment: 'Środowisko API'
+            office_origin: 'Urząd nadania'
+            save: 'Zapisz'
+            saved: 'Zapisano'
+            sandbox_environment: 'Deweloperskie'
+            production_environment: 'Produkcyjne'
+            not_found: 'Dodaj konfigurację (Ustawienia -> Poczta Polska - Konfiguracja)'
+            origin_offices:
+                empty: 'Dodaj urząd nadania (Ustawienia -> Poczta Polska - Konfiguracja)'
+                valid_credentials_first: 'Urząd nadania będzie dostępny po zapisaniu poprawnych danych do API'
+                select: 'Urząd nadania'
+        package:
+            already_created: 'Paczka została utworzona'
+            not_found: 'Paczka nie została znaleziona'
+            created: 'Paczka została utworzona'
+            too_large: 'Paczka jest za duża (wysokość, szerokość lub głębokość nie może być większa niż 150cm)'
