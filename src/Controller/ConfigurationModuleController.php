@@ -62,7 +62,11 @@ final class ConfigurationModuleController extends AbstractController
         } catch (ConfigNotFoundException) {
         }
 
-        $config = $this->configRepository->findByShopIdAndSalesChannelId($shopId, '') ?? new Config();
+        $config = $this->configRepository->findByShopIdAndSalesChannelId($shopId, '');
+        if (null === $config) {
+            $config = new Config();
+            $config->setApiPassword('');
+        }
 
         if ($request->isMethod('POST')) {
             $salesChannelId = (string) $request->request->get('salesChannelId');

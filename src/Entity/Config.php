@@ -15,7 +15,7 @@ class Config implements ConfigInterface
 
     protected string $apiLogin;
 
-    protected string $apiPassword = '';
+    protected string $apiPassword;
 
     protected string $apiEnvironment;
 
