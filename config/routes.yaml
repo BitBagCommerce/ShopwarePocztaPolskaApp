@@ -15,3 +15,13 @@ create_package:
   methods: ['POST']
   path: /app/create-package
   controller: BitBag\ShopwarePocztaPolskaApp\Controller\CreatePackageController::create
+
+get_label:
+  methods: ['POST']
+  path: /app/get-label
+  controller: BitBag\ShopwarePocztaPolskaApp\Controller\LabelController::getLabel
+
+show_label:
+  methods: ['GET']
+  path: /app/show-label
+  controller: BitBag\ShopwarePocztaPolskaApp\Controller\LabelController::showLabel

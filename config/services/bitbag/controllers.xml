@@ -39,5 +39,17 @@
 
             <tag name="controller.service_arguments" />
         </service>
+
+        <service id="BitBag\ShopwarePocztaPolskaApp\Controller\LabelController">
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Factory\FeedbackResponseFactory" />
+            <argument type="service" id="bitbag.shopware_app_system.service.document_service" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Finder\OrderFinder" />
+
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+
+            <tag name="controller.service_arguments" />
+        </service>
     </services>
 </container>
