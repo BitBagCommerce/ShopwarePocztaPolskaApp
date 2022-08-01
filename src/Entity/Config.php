@@ -42,7 +42,7 @@ class Config implements ConfigInterface
 
     public function getApiPassword(): string
     {
-        return $this->apiPassword;
+        return $this->apiPassword ?? '';
     }
 
     public function setApiPassword(string $apiPassword): void
