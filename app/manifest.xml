@@ -92,12 +92,11 @@
                     <label>Package contents *</label>
                     <label lang="pl-PL">Zawartość paczki *</label>
                 </text>
-                <text name="bitbag_shopware_poczta_polska_app_package_details_planned_shipping_date">
+                <datetime name="bitbag_shopware_poczta_polska_app_package_details_planned_shipping_date">
                     <position>5</position>
-                    <label>Shipment date *</label>
+                    <label>Shipping date *</label>
                     <label lang="pl-PL">Data nadania *</label>
-                    <placeholder>(YYYY-MM-DD)</placeholder>
-                </text>
+                </datetime>
             </fields>
         </custom-field-set>
     </custom-fields>
