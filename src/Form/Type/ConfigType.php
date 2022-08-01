@@ -8,6 +8,7 @@ use BitBag\ShopwarePocztaPolskaApp\Entity\Config;
 use BitBag\ShopwarePocztaPolskaApp\Entity\ConfigInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,7 +27,7 @@ final class ConfigType extends AbstractType
                 'label' => 'bitbag.shopware_poczta_polska_app.config.api_login',
                 'required' => true,
             ])
-            ->add('apiPassword', TextType::class, [
+            ->add('apiPassword', PasswordType::class, [
                 'label' => 'bitbag.shopware_poczta_polska_app.config.api_password',
                 'required' => true,
             ])
@@ -42,6 +43,7 @@ final class ConfigType extends AbstractType
                 'label' => 'bitbag.shopware_poczta_polska_app.config.office_origin',
                 'required' => true,
                 'choices' => $options['originOffices'],
+                'placeholder' => 'bitbag.shopware_poczta_polska_app.config.origin_offices.select',
             ]);
     }
 
