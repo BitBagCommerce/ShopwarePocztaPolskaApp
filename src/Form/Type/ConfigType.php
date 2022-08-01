@@ -41,7 +41,7 @@ final class ConfigType extends AbstractType
             ])
             ->add('originOffice', ChoiceType::class, [
                 'label' => 'bitbag.shopware_poczta_polska_app.config.office_origin',
-                'required' => true,
+                'required' => false,
                 'choices' => $options['originOffices'],
                 'placeholder' => 'bitbag.shopware_poczta_polska_app.config.origin_offices.select',
             ]);
