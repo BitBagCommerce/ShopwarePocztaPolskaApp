@@ -15,7 +15,7 @@ class Config implements ConfigInterface
 
     protected string $apiLogin;
 
-    protected string $apiPassword;
+    protected string $apiPassword = '';
 
     protected string $apiEnvironment;
 
@@ -42,7 +42,7 @@ class Config implements ConfigInterface
 
     public function getApiPassword(): string
     {
-        return $this->apiPassword ?? '';
+        return $this->apiPassword;
     }
 
     public function setApiPassword(string $apiPassword): void

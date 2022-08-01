@@ -30,7 +30,6 @@ final class ConfigType extends AbstractType
             ->add('apiPassword', PasswordType::class, [
                 'label' => 'bitbag.shopware_poczta_polska_app.config.api_password',
                 'required' => true,
-                'data' => ''
             ])
             ->add('apiEnvironment', ChoiceType::class, [
                 'label' => 'bitbag.shopware_poczta_polska_app.config.api_environment',
