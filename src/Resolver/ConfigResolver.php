@@ -18,8 +18,12 @@ final class ConfigResolver implements ConfigResolverInterface
 
     public function getConfig(string $shopId, string $salesChannelId): ConfigInterface
     {
-        /** @var ConfigInterface $config */
+        /** @var ConfigInterface|null $config */
         $config = $this->configRepository->findByShopIdAndSalesChannelId($shopId, $salesChannelId);
+        if (null === $config) {
+            /** @var ConfigInterface $config */
+            $config = $this->configRepository->findByShopIdAndSalesChannelId($shopId, '');
+        }
 
         $this->configValidator->validate($config);
 
