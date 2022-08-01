@@ -1,7 +1,7 @@
 bitbag:
     shopware_poczta_polska_app:
         order:
-            not_found: 'Zamówienie nie zostało znalezione'
+            not_found: 'Zamówienie nie zostało odnalezione'
             order_address:
                 invalid_street: 'Ulica jest niepoprawna'
             shipping_method:
@@ -30,8 +30,8 @@ bitbag:
             office_origin: 'Urząd nadania'
             save: 'Zapisz'
             saved: 'Zapisano'
-            sandbox_environment: 'Deweloperska'
-            production_environment: 'Produkcyjna'
+            sandbox_environment: 'Deweloperskie'
+            production_environment: 'Produkcyjne'
             not_found: 'Dodaj konfigurację (Ustawienia -> Poczta Polska - Konfiguracja)'
             origin_offices:
                 empty: 'Dodaj urząd nadania (Ustawienia -> Poczta Polska - Konfiguracja)'
