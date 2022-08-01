@@ -41,7 +41,7 @@ bitbag:
             origin_offices:
                 empty: 'Please select an origin office in the plugin configuration first (Settings -> Poczta Polska - Configuration)'
                 valid_credentials_first: 'Origin offices will be available after a valid API configuration has been provided'
-                select: 'Select origin office'
+                select: 'Origin office'
         package:
             already_created: 'A package has already been created'
             not_found: 'Package was not found. Create a package first'
