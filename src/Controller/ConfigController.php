@@ -14,16 +14,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class ConfigController extends AbstractController
 {
-    private ShopRepositoryInterface $shopRepository;
-
-    private ConfigRepositoryInterface $configRepository;
-
     public function __construct(
-        ShopRepositoryInterface $shopRepository,
-        ConfigRepositoryInterface $configRepository
+        private ShopRepositoryInterface $shopRepository,
+        private ConfigRepositoryInterface $configRepository
     ) {
-        $this->shopRepository = $shopRepository;
-        $this->configRepository = $configRepository;
     }
 
     public function __invoke(Request $request): JsonResponse

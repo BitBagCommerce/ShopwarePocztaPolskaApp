@@ -14,11 +14,8 @@ use Vin\ShopwareSdk\Repository\RepositoryInterface;
 
 final class OrderWeightCalculator implements OrderWeightCalculatorInterface
 {
-    private RepositoryInterface $productRepository;
-
-    public function __construct(RepositoryInterface $productRepository)
+    public function __construct(private RepositoryInterface $productRepository)
     {
-        $this->productRepository = $productRepository;
     }
 
     public function calculate(OrderEntity $order, Context $context): float
