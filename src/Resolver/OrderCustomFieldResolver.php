@@ -29,7 +29,7 @@ final class OrderCustomFieldResolver implements OrderCustomFieldResolverInterfac
 
             /** @var ConstraintViolationInterface $violation */
             foreach ($violations as $violation) {
-                $orderCustomFieldsMessage .= $violation->getMessage() . "\n";
+                $orderCustomFieldsMessage .= $violation->getMessage().'. <br />';
             }
 
             throw new OrderCustomFieldException($orderCustomFieldsMessage);
