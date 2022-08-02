@@ -16,7 +16,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Vin\ShopwareSdk\Data\Context;
+use Vin\ShopwareSdk\Data\Criteria;
 use Vin\ShopwareSdk\Data\Entity\Document\DocumentEntity;
+use Vin\ShopwareSdk\Data\Filter\EqualsFilter;
+use Vin\ShopwareSdk\Factory\RepositoryFactory;
 
 final class LabelController extends AbstractController
 {
@@ -40,6 +43,13 @@ final class LabelController extends AbstractController
         $technicalName = $shippingMethod->getTranslated()['customFields']['technical_name'] ?? null;
         if (CreatePackageController::SHIPPING_KEY !== $technicalName) {
             return $this->feedbackResponseFactory->createError('bitbag.shopware_poczta_polska_app.order.shipping_method.not_polish_post');
+        }
+
+        $packageRepository = RepositoryFactory::create('custom_entity_bitbag_shopware_poczta_polska_app_packages');
+        $packageCriteria = (new Criteria())->addFilter(new EqualsFilter('order.id', $order->id));
+        $package = $packageRepository->searchIds($packageCriteria, $context);
+        if (0 === $package->getTotal()) {
+            return $this->feedbackResponseFactory->createError('bitbag.shopware_poczta_polska_app.package.not_found');
         }
 
         $redirectUrl = $this->generateUrl(
