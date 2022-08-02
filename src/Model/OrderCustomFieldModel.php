@@ -6,28 +6,13 @@ namespace BitBag\ShopwarePocztaPolskaApp\Model;
 
 final class OrderCustomFieldModel
 {
-    private string|int $depth;
-
-    private string|int $height;
-
-    private string|int $width;
-
-    private string $packageContents;
-
-    private string $plannedShippingDate;
-
     public function __construct(
-        string|int $depth,
-        string|int $height,
-        string|int $width,
-        string $packageContents,
-        string $plannedShippingDate
+        private string | int $depth,
+        private string | int $height,
+        private string | int $width,
+        private string $packageContents,
+        private string $plannedShippingDate
     ) {
-        $this->depth = $depth;
-        $this->height = $height;
-        $this->width = $width;
-        $this->packageContents = $packageContents;
-        $this->plannedShippingDate = $plannedShippingDate;
     }
 
     public function getDepth(): int

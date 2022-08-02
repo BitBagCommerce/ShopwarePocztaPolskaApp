@@ -12,11 +12,8 @@ use Vin\ShopwareSdk\Repository\Struct\EntitySearchResult;
 
 final class SalesChannelFinder implements SalesChannelFinderInterface
 {
-    private RepositoryInterface $salesChannelRepository;
-
-    public function __construct(RepositoryInterface $salesChannelRepository)
+    public function __construct(private RepositoryInterface $salesChannelRepository)
     {
-        $this->salesChannelRepository = $salesChannelRepository;
     }
 
     public function findAll(Context $context): EntitySearchResult

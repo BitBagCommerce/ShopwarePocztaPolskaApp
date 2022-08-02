@@ -32,8 +32,8 @@ final class ConfigurationModuleController extends AbstractController
         private TranslatorInterface $translator,
         private SalesChannelFinderInterface $salesChannelFinder,
         private ContextFactoryInterface $contextFactory,
-        private ApiResolverInterface $apiResolver,
-        ) {
+        private ApiResolverInterface $apiResolver
+    ) {
     }
 
     public function __invoke(Request $request): Response
