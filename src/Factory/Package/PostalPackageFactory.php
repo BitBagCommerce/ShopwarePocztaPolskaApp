@@ -55,7 +55,7 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
         $package->setCategory(RecordedDelivery::CATEGORY_PRIORITY);
         $package->setPackageSize($packageSize);
         $package->setPlannedShippingDate(new DateTime($plannedShippingDate));
-        $package->setWeight((int) round($weight));
+        $package->setWeight((int) ($weight * 1000));
         $package->setTotalAmount($totalAmount);
         $package->setPacketGuid($guid);
         $package->setPackagingGuid($guid);

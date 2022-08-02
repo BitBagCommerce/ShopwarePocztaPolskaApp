@@ -20,8 +20,6 @@ final class PostalPackageFactoryTest extends TestCase
 {
     private const ORDER_WEIGHT = 5.5;
 
-    private const ROUNDED_WEIGHT = 6;
-
     private const PLANNED_SHIPPING_DATE = '2022-08-30';
 
     private const PACKAGE_CONTENTS = 'T-shirt';
@@ -63,7 +61,7 @@ final class PostalPackageFactoryTest extends TestCase
 
         $postalPackage = new PostalPackage();
         $postalPackage->setCategory(RecordedDelivery::CATEGORY_PRIORITY);
-        $postalPackage->setWeight(self::ROUNDED_WEIGHT);
+        $postalPackage->setWeight((int) (self::ORDER_WEIGHT * 1000));
         $postalPackage->setTotalAmount(self::TOTAL_AMOUNT_INT);
         $postalPackage->setAddress($address);
         $postalPackage->setPlannedShippingDate(new \DateTime(self::PLANNED_SHIPPING_DATE));
