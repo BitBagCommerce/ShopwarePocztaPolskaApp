@@ -44,6 +44,7 @@
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Factory\FeedbackResponseFactory" />
             <argument type="service" id="bitbag.shopware_app_system.service.document_service" />
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Finder\OrderFinder" />
+            <argument type="service" id="shopware.repository.custom_entity_bitbag_shopware_poczta_polska_app_packages" />
 
             <call method="setContainer">
                 <argument type="service" id="service_container" />

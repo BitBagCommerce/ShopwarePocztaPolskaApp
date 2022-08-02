@@ -13,6 +13,7 @@ use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
 use Vin\ShopwareSdk\Data\Entity\OrderDelivery\OrderDeliveryCollection;
 use Vin\ShopwareSdk\Data\Entity\OrderDelivery\OrderDeliveryEntity;
 use Vin\ShopwareSdk\Data\Entity\ShippingMethod\ShippingMethodEntity;
+use Vin\ShopwareSdk\Repository\RepositoryInterface;
 
 final class OrderValidatorTest extends TestCase
 {
@@ -20,7 +21,8 @@ final class OrderValidatorTest extends TestCase
     {
         $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.order.shipping_method.not_found');
 
-        $validator = new OrderValidator();
+        $packageRepository = $this->createMock(RepositoryInterface::class);
+        $validator = new OrderValidator($packageRepository);
         $context = new Context('http://shopware', new AccessToken('access-token'));
 
         $order = new OrderEntity();
@@ -33,7 +35,8 @@ final class OrderValidatorTest extends TestCase
     {
         $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.order.shipping_method.not_polish_post');
 
-        $validator = new OrderValidator();
+        $packageRepository = $this->createMock(RepositoryInterface::class);
+        $validator = new OrderValidator($packageRepository);
         $context = new Context('', new AccessToken('access-token'));
 
         $shippingMethod = new ShippingMethodEntity();

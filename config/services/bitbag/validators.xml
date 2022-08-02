@@ -6,7 +6,9 @@
             <argument type="service" id="translator" />
         </service>
 
-        <service id="BitBag\ShopwarePocztaPolskaApp\Validator\OrderValidator" />
+        <service id="BitBag\ShopwarePocztaPolskaApp\Validator\OrderValidator">
+            <argument type="service" id="shopware.repository.custom_entity_bitbag_shopware_poczta_polska_app_packages" />
+        </service>
 
         <service id="BitBag\ShopwarePocztaPolskaApp\Validator\ConfigValidator">
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepository" />

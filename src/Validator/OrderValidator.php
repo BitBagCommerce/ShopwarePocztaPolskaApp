@@ -11,10 +11,14 @@ use Vin\ShopwareSdk\Data\Context;
 use Vin\ShopwareSdk\Data\Criteria;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
 use Vin\ShopwareSdk\Data\Filter\EqualsFilter;
-use Vin\ShopwareSdk\Factory\RepositoryFactory;
+use Vin\ShopwareSdk\Repository\RepositoryInterface;
 
 final class OrderValidator implements OrderValidatorInterface
 {
+    public function __construct(private RepositoryInterface $packageRepository)
+    {
+    }
+
     public function validate(
         string $shopId,
         OrderEntity $order,
@@ -30,9 +34,8 @@ final class OrderValidator implements OrderValidatorInterface
             throw new OrderException('bitbag.shopware_poczta_polska_app.order.shipping_method.not_polish_post');
         }
 
-        $packageRepository = RepositoryFactory::create('custom_entity_bitbag_shopware_poczta_polska_app_packages');
         $packageCriteria = (new Criteria())->addFilter(new EqualsFilter('order.id', $order->id));
-        $package = $packageRepository->searchIds($packageCriteria, $context);
+        $package = $this->packageRepository->searchIds($packageCriteria, $context);
         if (0 !== $package->getTotal()) {
             throw new OrderException('bitbag.shopware_poczta_polska_app.package.already_created');
         }
