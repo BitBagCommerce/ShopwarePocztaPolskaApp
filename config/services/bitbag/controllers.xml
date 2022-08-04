@@ -36,6 +36,7 @@
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Api\OrderDeliveryApiService" />
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\OrderResolver" />
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\ConfigResolver" />
+            <argument type="service" id="shopware.repository.custom_entity_bitbag_shopware_poczta_polska_app_packages" />
 
             <tag name="controller.service_arguments" />
         </service>

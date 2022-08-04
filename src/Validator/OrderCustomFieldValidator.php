@@ -46,6 +46,7 @@ final class OrderCustomFieldValidator implements OrderCustomFieldValidatorInterf
                     'min' => 1,
                     'minMessage' => $this->translator->trans('bitbag.shopware_poczta_polska_app.order.custom_fields.depth_invalid'),
                 ]),
+                new Assert\NotEqualTo(0, null, $this->translator->trans('bitbag.shopware_poczta_polska_app.order.custom_fields.depth_invalid')),
             ],
             $heightKey => [
                 new Assert\NotBlank([
@@ -55,6 +56,7 @@ final class OrderCustomFieldValidator implements OrderCustomFieldValidatorInterf
                     'min' => 1,
                     'minMessage' => $this->translator->trans('bitbag.shopware_poczta_polska_app.order.custom_fields.height_invalid'),
                 ]),
+                new Assert\NotEqualTo(0, null, $this->translator->trans('bitbag.shopware_poczta_polska_app.order.custom_fields.height_invalid')),
             ],
             $widthKey => [
                 new Assert\NotBlank([
@@ -64,6 +66,7 @@ final class OrderCustomFieldValidator implements OrderCustomFieldValidatorInterf
                     'min' => 1,
                     'minMessage' => $this->translator->trans('bitbag.shopware_poczta_polska_app.order.custom_fields.width_invalid'),
                 ]),
+                new Assert\NotEqualTo(0, null, $this->translator->trans('bitbag.shopware_poczta_polska_app.order.custom_fields.width_invalid')),
             ],
             $packageContentsKey => new Assert\NotBlank([
                 'message' => $this->translator->trans('bitbag.shopware_poczta_polska_app.order.custom_fields.package_contents_invalid'),

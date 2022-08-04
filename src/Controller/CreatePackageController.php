@@ -21,7 +21,7 @@ use BitBag\ShopwarePocztaPolskaApp\Resolver\ConfigResolverInterface;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\OrderResolverInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Vin\ShopwareSdk\Data\Context;
-use Vin\ShopwareSdk\Factory\RepositoryFactory;
+use Vin\ShopwareSdk\Repository\RepositoryInterface;
 
 final class CreatePackageController
 {
@@ -33,7 +33,8 @@ final class CreatePackageController
         private PackageApiServiceInterface $packageApiService,
         private OrderDeliveryApiServiceInterface $orderDeliveryApiService,
         private OrderResolverInterface $orderResolver,
-        private ConfigResolverInterface $configResolver
+        private ConfigResolverInterface $configResolver,
+        private RepositoryInterface $packageRepository
     ) {
     }
 
@@ -94,8 +95,7 @@ final class CreatePackageController
         string $orderId,
         Context $context
     ): void {
-        $packageRepository = RepositoryFactory::create('custom-entity-bitbag-shopware-poczta-polska-app-packages');
-        $packageRepository->create([
+        $this->packageRepository->create([
             'guid' => $guid,
             'orderNumber' => $trackingCode,
             'orderId' => $orderId,
