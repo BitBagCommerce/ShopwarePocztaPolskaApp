@@ -28,10 +28,10 @@ final class ConfigValidator implements ConfigValidatorInterface
             throw new ConfigException('bitbag.shopware_poczta_polska_app.config.origin_offices.empty');
         }
 
-        $this->checkValidOriginOffice($config);
+        $this->validateOriginOffice($config);
     }
 
-    private function checkValidOriginOffice(ConfigInterface $config): void
+    private function validateOriginOffice(ConfigInterface $config): void
     {
         $client = $this->apiResolver->getClient($config->getShop()->getShopId(), $config->getSalesChannelId());
         $originOffices = $client->getOriginOffice()->getOriginOffices();
