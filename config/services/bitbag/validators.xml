@@ -12,6 +12,7 @@
 
         <service id="BitBag\ShopwarePocztaPolskaApp\Validator\ConfigValidator">
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepository" />
+            <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolver" />
         </service>
     </services>
 </container>

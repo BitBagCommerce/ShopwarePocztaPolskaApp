@@ -35,6 +35,7 @@ bitbag:
             not_found: 'Dodaj konfigurację (Ustawienia -> Poczta Polska - Konfiguracja)'
             origin_offices:
                 empty: 'Dodaj urząd nadania (Ustawienia -> Poczta Polska - Konfiguracja)'
+                invalid: 'Wybierz urząd nadania ponownie lub wybierz inny'
                 valid_credentials_first: 'Urząd nadania będzie dostępny po zapisaniu poprawnych danych do API'
                 select: 'Urząd nadania'
         package:

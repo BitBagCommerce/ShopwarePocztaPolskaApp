@@ -7,6 +7,7 @@ namespace BitBag\ShopwarePocztaPolskaApp\Tests\Validator;
 use BitBag\ShopwareAppSystemBundle\Entity\Shop;
 use BitBag\ShopwarePocztaPolskaApp\Entity\Config;
 use BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepositoryInterface;
+use BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolverInterface;
 use BitBag\ShopwarePocztaPolskaApp\Validator\ConfigValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +18,8 @@ final class ConfigValidatorTest extends TestCase
         $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.config.not_found');
 
         $configRepository = $this->createMock(ConfigRepositoryInterface::class);
-        $validator = new ConfigValidator($configRepository);
+        $apiResolver = $this->createMock(ApiResolverInterface::class);
+        $validator = new ConfigValidator($configRepository, $apiResolver);
 
         $validator->validate(null);
     }
@@ -27,7 +29,8 @@ final class ConfigValidatorTest extends TestCase
         $this->expectExceptionMessage('bitbag.shopware_poczta_polska_app.config.origin_offices.empty');
 
         $configRepository = $this->createMock(ConfigRepositoryInterface::class);
-        $validator = new ConfigValidator($configRepository);
+        $apiResolver = $this->createMock(ApiResolverInterface::class);
+        $validator = new ConfigValidator($configRepository, $apiResolver);
 
         $config = $this->createConfig();
         $config->setOriginOffice(null);
