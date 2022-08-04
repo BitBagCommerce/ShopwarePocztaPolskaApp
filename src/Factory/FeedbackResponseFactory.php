@@ -30,7 +30,7 @@ final class FeedbackResponseFactory implements FeedbackResponseFactoryInterface
 
     public function createSuccess(string $messageKey): JsonResponse
     {
-        return new FeedbackResponse(new Success($this->translator->trans($messageKey, [])));
+        return new FeedbackResponse(new Success($this->translator->trans($messageKey)));
     }
 
     public function createWarning(string $messageKey): JsonResponse
