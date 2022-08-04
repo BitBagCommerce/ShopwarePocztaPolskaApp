@@ -40,7 +40,7 @@ bitbag:
             notification_message_error: 'Provided data is not valid'
             origin_offices:
                 empty: 'Please select an origin office in the plugin configuration first (Settings -> Poczta Polska - Configuration)'
-                invalid: 'Selected an origin office again or choose another one'
+                invalid: 'Select an origin office again or choose another one'
                 valid_credentials_first: 'Origin offices will be available after a valid API configuration has been provided'
                 select: 'Origin office'
         package:
