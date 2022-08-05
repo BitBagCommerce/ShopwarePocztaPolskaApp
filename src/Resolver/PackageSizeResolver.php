@@ -25,7 +25,7 @@ final class PackageSizeResolver implements PackageSizeResolverInterface
 
         $maxDimensions = PostalPackage::PACKAGE_SIZE_B_MAX_DIMENSIONS;
         if ($maxDimensions < $depth || $maxDimensions < $height || $maxDimensions < $width) {
-            throw new PackageSizeException('bitbag.shopware_poczta_polska_app.package.weight_too_large');
+            throw new PackageSizeException('bitbag.shopware_poczta_polska_app.package.too_large');
         }
 
         if (PostalPackage::PACKAGE_SIZE_A_MAX_DEPTH < $depth ||
