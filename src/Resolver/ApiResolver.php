@@ -13,12 +13,13 @@ namespace BitBag\ShopwarePocztaPolskaApp\Resolver;
 use BitBag\PPClient\Client\PPClient;
 use BitBag\PPClient\Client\PPClientConfiguration;
 use BitBag\PPClient\Factory\Client\SoapClientFactory;
-use BitBag\PPClient\Factory\Response\AddShipmentResponseFactory;
+use BitBag\PPClient\Factory\Response\AddDeliveryResponseFactory;
 use BitBag\PPClient\Factory\Response\ClearEnvelopeResponseFactory;
 use BitBag\PPClient\Factory\Response\GetLabelResponseFactory;
 use BitBag\PPClient\Factory\Response\GetOriginOfficeResponseFactory;
 use BitBag\PPClient\Factory\Response\SendEnvelopeResponseFactory;
 use BitBag\PPClient\Normalizer\ArrayNormalizer;
+use BitBag\ShopwarePocztaPolskaApp\Entity\ConfigInterface;
 use BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepositoryInterface;
 
 final class ApiResolver implements ApiResolverInterface
@@ -32,15 +33,18 @@ final class ApiResolver implements ApiResolverInterface
         $config = $this->configRepository->getByShopIdAndSalesChannelId($shopId, $salesChannelId);
         $arrayNormalizer = new ArrayNormalizer();
         $soapClientFactory = new SoapClientFactory();
+        $wsdlFile = $config->getApiEnvironment() === ConfigInterface::PRODUCTION_ENVIRONMENT ?
+            'client_prod.wsdl' :
+            'client_dev.wsdl';
         $ppClientConfiguration = new PPClientConfiguration(
-            __DIR__ . '/../../vendor/bitbag/pp-client/src/Resources/client_dev.wsdl',
+            $wsdlFile,
             $config->getApiLogin(),
             $config->getApiPassword(),
         );
 
         return new PPClient(
             $soapClientFactory->create($ppClientConfiguration),
-            new AddShipmentResponseFactory(),
+            new AddDeliveryResponseFactory(),
             new ClearEnvelopeResponseFactory($arrayNormalizer),
             new GetLabelResponseFactory($arrayNormalizer),
             new SendEnvelopeResponseFactory($arrayNormalizer),
