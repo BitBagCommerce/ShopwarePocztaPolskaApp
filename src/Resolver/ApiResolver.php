@@ -33,11 +33,11 @@ final class ApiResolver implements ApiResolverInterface
         $config = $this->configRepository->getByShopIdAndSalesChannelId($shopId, $salesChannelId);
         $arrayNormalizer = new ArrayNormalizer();
         $soapClientFactory = new SoapClientFactory();
-        $wsdlFile = $config->getApiEnvironment() === ConfigInterface::PRODUCTION_ENVIRONMENT ?
+        $wsdlFile = ConfigInterface::PRODUCTION_ENVIRONMENT === $config->getApiEnvironment() ?
             'client_prod.wsdl' :
             'client_dev.wsdl';
         $ppClientConfiguration = new PPClientConfiguration(
-            $wsdlFile,
+            __DIR__ . "/../../vendor/bitbag/pp-client/src/Resources/$wsdlFile",
             $config->getApiLogin(),
             $config->getApiPassword(),
         );
