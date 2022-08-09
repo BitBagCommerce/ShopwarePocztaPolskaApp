@@ -54,12 +54,12 @@ final class PackageSizeResolver implements PackageSizeResolverInterface
         }
 
         if (PocztexPackageSizeEnum::MAX_DEPTH_2XL < $depth) {
-            throw new PackageSizeException('2bitbag.shopware_poczta_polska_app.package.too_large');
+            throw new PackageSizeException('bitbag.shopware_poczta_polska_app.package.too_large');
         }
 
         $packageDimensions = $depth + $height + $width;
         if (PocztexPackageSizeEnum::MAX_DIMENSIONS_2XL < $packageDimensions) {
-            throw new PackageSizeException('3bitbag.shopware_poczta_polska_app.package.too_large');
+            throw new PackageSizeException('bitbag.shopware_poczta_polska_app.package.too_large');
         }
 
         return PocztexPackageSizeEnum::DOUBLE_XL;

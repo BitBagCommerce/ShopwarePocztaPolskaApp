@@ -138,7 +138,7 @@ final class PackageFactoryTest extends TestCase
         $package->setPackagingGuid($packageFactory->getPackagingGuid());
         $package->setDescription(self::PACKAGE_CONTENTS);
         $package->setEpo(new EpoSimple());
-        $package->setPaidBy(PaidByEnum::ADDRESSEE);
+        $package->setPaidBy(PaidByEnum::RECEIVER);
         $package->setPocztexPackageFormat(PocztexPackageSizeEnum::S);
 
         $packageContent = new PackageContent();

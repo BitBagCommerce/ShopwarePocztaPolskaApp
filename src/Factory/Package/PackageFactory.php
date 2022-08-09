@@ -77,7 +77,7 @@ final class PackageFactory implements PackageFactoryInterface
 
         $paymentMethod = $order->transactions?->first()?->paymentMethod;
         if ($this->isCashOnDelivery($paymentMethod)) {
-            $package->setPaidBy(PaidByEnum::ADDRESSEE);
+            $package->setPaidBy(PaidByEnum::RECEIVER);
 
             $paidByReceiver = new PaidByReceiver();
             $paidByReceiver->setType(PaidByReceiverEnum::INDIVIDUAL_RECEIVER);
