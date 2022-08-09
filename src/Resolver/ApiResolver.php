@@ -19,6 +19,7 @@ use BitBag\PPClient\Factory\Response\GetLabelResponseFactory;
 use BitBag\PPClient\Factory\Response\GetOriginOfficeResponseFactory;
 use BitBag\PPClient\Factory\Response\SendEnvelopeResponseFactory;
 use BitBag\PPClient\Normalizer\ArrayNormalizer;
+use BitBag\ShopwarePocztaPolskaApp\Entity\ConfigInterface;
 use BitBag\ShopwarePocztaPolskaApp\Repository\ConfigRepositoryInterface;
 
 final class ApiResolver implements ApiResolverInterface
@@ -32,8 +33,11 @@ final class ApiResolver implements ApiResolverInterface
         $config = $this->configRepository->getByShopIdAndSalesChannelId($shopId, $salesChannelId);
         $arrayNormalizer = new ArrayNormalizer();
         $soapClientFactory = new SoapClientFactory();
+        $wsdlFile = ConfigInterface::PRODUCTION_ENVIRONMENT === $config->getApiEnvironment() ?
+            'client_prod.wsdl' :
+            'client_dev.wsdl';
         $ppClientConfiguration = new PPClientConfiguration(
-            __DIR__ . '/../../vendor/bitbag/pp-client/src/Resources/client_dev.wsdl',
+            __DIR__ . "/../../vendor/bitbag/pp-client/src/Resources/$wsdlFile",
             $config->getApiLogin(),
             $config->getApiPassword(),
         );
