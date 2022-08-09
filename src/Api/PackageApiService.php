@@ -11,13 +11,13 @@ declare(strict_types=1);
 namespace BitBag\ShopwarePocztaPolskaApp\Api;
 
 use BitBag\PPClient\Client\PPClientInterface;
-use BitBag\PPClient\Model\AddShipmentResponseItem;
+use BitBag\PPClient\Model\AddDeliveryResponseItem;
 use BitBag\PPClient\Model\Packet;
+use BitBag\PPClient\Model\Request\PocztexDeliveryRequest;
 use BitBag\PPClient\Model\Request\SendEnvelopeRequest;
-use BitBag\PPClient\Model\Request\ShipmentRequest;
 use BitBag\ShopwarePocztaPolskaApp\Exception\PackageException;
 use BitBag\ShopwarePocztaPolskaApp\Factory\Package\AddressFactoryInterface;
-use BitBag\ShopwarePocztaPolskaApp\Factory\Package\PostalPackageFactoryInterface;
+use BitBag\ShopwarePocztaPolskaApp\Factory\Package\PackageFactoryInterface;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolverInterface;
 use Vin\ShopwareSdk\Data\Context;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
@@ -26,7 +26,7 @@ final class PackageApiService implements PackageApiServiceInterface
 {
     public function __construct(
         private AddressFactoryInterface $addressFactory,
-        private PostalPackageFactoryInterface $postalPackageFactory,
+        private PackageFactoryInterface $packageFactory,
         private ApiResolverInterface $apiResolver,
         private DocumentApiServiceInterface $documentApiService
     ) {
@@ -38,12 +38,12 @@ final class PackageApiService implements PackageApiServiceInterface
         OrderEntity $order,
         Context $context,
         PPClientInterface $client
-    ): AddShipmentResponseItem {
+    ): AddDeliveryResponseItem {
         $address = $this->addressFactory->create(
             $order->deliveries?->first()->shippingOrderAddress,
             $order->orderCustomer?->email
         );
-        $package = $this->postalPackageFactory->create(
+        $package = $this->packageFactory->create(
             $order,
             $address,
             $context
@@ -51,11 +51,11 @@ final class PackageApiService implements PackageApiServiceInterface
 
         $client->clearEnvelope();
 
-        $shipmentRequest = new ShipmentRequest();
+        $shipmentRequest = new PocztexDeliveryRequest();
         $shipmentRequest->setPackages([$package]);
-        $shipment = $client->addShipment($shipmentRequest);
+        $shipment = $client->addPocztexDelivery($shipmentRequest);
 
-        $firstPackageResponse = $shipment->getAddShipmentResponseItems()[0];
+        $firstPackageResponse = $shipment->getAddDeliveryResponseItems()[0];
         if ([] !== $firstPackageResponse->getErrors()) {
             throw new PackageException($firstPackageResponse->getErrors()[0]->getErrorDesc());
         }
