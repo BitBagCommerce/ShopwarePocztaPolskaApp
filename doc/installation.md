@@ -1,4 +1,4 @@
-## Installation
+## Installation in Shopware
 
 You can install the app in a variety of ways.
 
@@ -16,3 +16,14 @@ You can install the app in a variety of ways.
        ```bash
          $ bin/console app:activate BitBagShopwarePocztaPolskaApp
        ```
+## Run symfony sever
+1. Install dependencies
+```bash
+$ composer install
+```
+2. Run basic setup server:
+```bash
+$ symfony server:start
+```
+
+Other deployment options largely depend on your architecture.

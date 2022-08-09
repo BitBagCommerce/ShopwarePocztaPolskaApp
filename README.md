@@ -15,7 +15,6 @@ At BitBag we do believe in open source. However, we are able to do it just becau
 * [Support](#we-are-here-to-help)
 * [Installation](#installation)
     * [Requirements](#requirements)
-    * [Testing](#testing)
 * [Configuration](#configuration)
 * [About us](#about-us)
     * [Community](#community)
@@ -34,7 +33,7 @@ At BitBag we do believe in open source. However, we are able to do it just becau
 This application allows customers to choose Poczta Polska during the checkout process and create Poczta Polska packages in the back office.
 
 ## We are here to help
-This **open-source plugin was developed to help the Shopware community** and make Poczta Polska shipments method available to any Shopware store. If you have any additional questions, would like help with installing or configuring the app, or need any assistance with your Shopware project - let us know!
+This **open-source app was developed to help the Shopware community** and make the Poczta Polska shipping method available to any Shopware store. If you have any additional questions, would like help with installing or configuring the app, or need any assistance with your Shopware project - let us know!
 
 [![](https://bitbag.io/wp-content/uploads/2020/10/button-contact.png)](https://bitbag.io/contact-us/?utm_source=github&utm_medium=referral&utm_campaign=poczta_polska_app_shopware)
 
@@ -121,9 +120,7 @@ To learn more about our contribution workflow and more, we encourage ypu to use 
 
 ---
 
-This plugin source code is completely free and released under the terms of the MIT license.
-
-[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen.)
+This app's source code is completely free and released under the terms of the MIT license.
 
 ## Contact
 
