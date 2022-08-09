@@ -15,6 +15,7 @@ interface PackageSizeResolverInterface
     public function resolve(
         int $depth,
         int $height,
-        int $width
+        int $width,
+        int $weight
     ): string;
 }

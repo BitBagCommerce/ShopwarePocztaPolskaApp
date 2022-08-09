@@ -15,7 +15,7 @@ use BitBag\PPClient\Model\RecordedDelivery;
 use Vin\ShopwareSdk\Data\Context;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
 
-interface PostalPackageFactoryInterface
+interface PackageFactoryInterface
 {
     public const CASH_PAYMENT_CLASS = 'Shopware\Core\Checkout\Payment\Cart\PaymentHandler\CashPayment';
 
