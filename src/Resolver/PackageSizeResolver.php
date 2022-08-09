@@ -10,8 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\ShopwarePocztaPolskaApp\Resolver;
 
-use BitBag\PPClient\Model\PostalPackage;
-use BitBag\PPClient\Model\RecordedDelivery;
+use BitBag\PPClient\Model\PocztexPackageSizeEnum;
 use BitBag\ShopwarePocztaPolskaApp\Exception\PackageSizeException;
 
 final class PackageSizeResolver implements PackageSizeResolverInterface
@@ -19,22 +18,50 @@ final class PackageSizeResolver implements PackageSizeResolverInterface
     public function resolve(
         int $depth,
         int $height,
-        int $width
+        int $width,
+        int $weight
     ): string {
-        $packageSize = RecordedDelivery::PACKAGE_SIZE_A;
-
-        $maxDimensions = PostalPackage::PACKAGE_SIZE_B_MAX_DIMENSIONS;
-        if ($maxDimensions < $depth || $maxDimensions < $height || $maxDimensions < $width) {
-            throw new PackageSizeException('bitbag.shopware_poczta_polska_app.package.too_large');
-        }
-
-        if (PostalPackage::PACKAGE_SIZE_A_MAX_DEPTH < $depth ||
-            PostalPackage::PACKAGE_SIZE_A_MAX_HEIGHT < $height ||
-            PostalPackage::PACKAGE_SIZE_A_MAX_WIDTH < $width
+        if (PocztexPackageSizeEnum::MAX_HEIGHT_S >= $height &&
+            PocztexPackageSizeEnum::MAX_DEPTH_S >= $depth &&
+            PocztexPackageSizeEnum::MAX_WIDTH_S >= $width &&
+            PocztexPackageSizeEnum::MAX_WEIGHT_S >= $weight
         ) {
-            $packageSize = RecordedDelivery::PACKAGE_SIZE_B;
+            return PocztexPackageSizeEnum::S;
         }
 
-        return $packageSize;
+        if (PocztexPackageSizeEnum::MAX_HEIGHT_M >= $height &&
+            PocztexPackageSizeEnum::MAX_DEPTH_M >= $depth &&
+            PocztexPackageSizeEnum::MAX_WIDTH_M >= $width &&
+            PocztexPackageSizeEnum::MAX_WEIGHT_M >= $weight
+        ) {
+            return PocztexPackageSizeEnum::M;
+        }
+
+        if (PocztexPackageSizeEnum::MAX_HEIGHT_L >= $height &&
+            PocztexPackageSizeEnum::MAX_DEPTH_L >= $depth &&
+            PocztexPackageSizeEnum::MAX_WIDTH_L >= $width &&
+            PocztexPackageSizeEnum::MAX_WEIGHT_L >= $weight
+        ) {
+            return PocztexPackageSizeEnum::L;
+        }
+
+        if (PocztexPackageSizeEnum::MAX_HEIGHT_XL >= $height &&
+            PocztexPackageSizeEnum::MAX_DEPTH_XL >= $depth &&
+            PocztexPackageSizeEnum::MAX_WIDTH_XL >= $width &&
+            PocztexPackageSizeEnum::MAX_WEIGHT_XL >= $weight
+        ) {
+            return PocztexPackageSizeEnum::XL;
+        }
+
+        if (PocztexPackageSizeEnum::MAX_DEPTH_2XL < $depth) {
+            throw new PackageSizeException('2bitbag.shopware_poczta_polska_app.package.too_large');
+        }
+
+        $packageDimensions = $depth + $height + $width;
+        if (PocztexPackageSizeEnum::MAX_DIMENSIONS_2XL < $packageDimensions) {
+            throw new PackageSizeException('3bitbag.shopware_poczta_polska_app.package.too_large');
+        }
+
+        return PocztexPackageSizeEnum::DOUBLE_XL;
     }
 }

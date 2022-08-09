@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace BitBag\ShopwarePocztaPolskaApp\Calculator;
 
+use BitBag\PPClient\Model\PocztexPackageSizeEnum;
 use BitBag\ShopwarePocztaPolskaApp\Exception\Order\OrderWeightException;
 use Vin\ShopwareSdk\Data\Context;
 use Vin\ShopwareSdk\Data\Criteria;
@@ -27,9 +28,7 @@ final class OrderWeightCalculator implements OrderWeightCalculatorInterface
     public function calculate(OrderEntity $order, Context $context): float
     {
         $totalWeight = 0.0;
-
         $lineItems = $order->lineItems?->getElements();
-
         if (null === $lineItems) {
             $lineItems = [];
         }
@@ -68,7 +67,7 @@ final class OrderWeightCalculator implements OrderWeightCalculatorInterface
             throw new OrderWeightException('bitbag.shopware_poczta_polska_app.order.products.null_weight');
         }
 
-        if (self::MAX_WEIGHT_AVAILABLE <= $totalWeight) {
+        if (PocztexPackageSizeEnum::MAX_WEIGHT_2XL <= $totalWeight) {
             throw new OrderWeightException('bitbag.shopware_poczta_polska_app.order.products.too_heavy');
         }
 

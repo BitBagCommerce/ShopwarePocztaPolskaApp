@@ -12,8 +12,12 @@ namespace BitBag\ShopwarePocztaPolskaApp\Factory\Package;
 
 use BitBag\PPClient\Model\Address;
 use BitBag\PPClient\Model\COD;
-use BitBag\PPClient\Model\CODShipment;
-use BitBag\PPClient\Model\PostalPackage;
+use BitBag\PPClient\Model\EpoSimple;
+use BitBag\PPClient\Model\PackageContent;
+use BitBag\PPClient\Model\PaidByEnum;
+use BitBag\PPClient\Model\PaidByReceiver;
+use BitBag\PPClient\Model\PaidByReceiverEnum;
+use BitBag\PPClient\Model\PocztexCourier;
 use BitBag\PPClient\Model\RecordedDelivery;
 use BitBag\ShopwarePocztaPolskaApp\Calculator\OrderWeightCalculatorInterface;
 use BitBag\ShopwarePocztaPolskaApp\Guid\Guid;
@@ -24,7 +28,7 @@ use Vin\ShopwareSdk\Data\Context;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
 use Vin\ShopwareSdk\Data\Entity\PaymentMethod\PaymentMethodEntity;
 
-final class PostalPackageFactory implements PostalPackageFactoryInterface
+final class PackageFactory implements PackageFactoryInterface
 {
     public function __construct(
         private OrderWeightCalculatorInterface $orderWeightCalculator,
@@ -43,31 +47,43 @@ final class PostalPackageFactory implements PostalPackageFactoryInterface
     ): RecordedDelivery {
         $customFields = $this->orderCustomFieldResolver->resolve($order);
         $guid = Guid::generate();
+        $weight = $this->orderWeightCalculator->calculate($order, $context);
         $packageSize = $this->packageSizeResolver->resolve(
             $customFields->getDepth(),
             $customFields->getHeight(),
-            $customFields->getWidth()
+            $customFields->getWidth(),
+            (int) round($weight)
         );
-        $plannedShippingDate = $customFields->getPlannedShippingDate();
         $description = $customFields->getPackageContents();
-        $weight = $this->orderWeightCalculator->calculate($order, $context);
         $totalAmount = (int) ($order->amountTotal * 100);
 
-        $paymentMethod = $order->transactions?->first()?->paymentMethod;
-
-        $package = $this->isCashOnDelivery($paymentMethod) ? new CODShipment() : new PostalPackage();
+        $package = new PocztexCourier();
         $package->setGuid($guid);
         $package->setAddress($address);
-        $package->setCategory(RecordedDelivery::CATEGORY_PRIORITY);
-        $package->setPackageSize($packageSize);
-        $package->setPlannedShippingDate(new DateTime($plannedShippingDate));
+        $package->setPlannedShippingDate(new DateTime($customFields->getPlannedShippingDate()));
         $package->setWeight((int) ($weight * 1000));
         $package->setTotalAmount($totalAmount);
         $package->setPacketGuid($guid);
         $package->setPackagingGuid($guid);
         $package->setDescription($description);
+        $package->setEpo(new EpoSimple());
+        $package->setPaidBy(PaidByEnum::SENDER);
+        $package->setPocztexPackageFormat($packageSize);
 
-        if ($this->isCashOnDelivery($paymentMethod) && $package instanceof CODShipment) {
+        $packageContent = new PackageContent();
+        $packageContent->setAnotherPackageContent($description);
+
+        $package->setPackageContents($packageContent);
+
+        $paymentMethod = $order->transactions?->first()?->paymentMethod;
+        if ($this->isCashOnDelivery($paymentMethod)) {
+            $package->setPaidBy(PaidByEnum::ADDRESSEE);
+
+            $paidByReceiver = new PaidByReceiver();
+            $paidByReceiver->setType(PaidByReceiverEnum::INDIVIDUAL_RECEIVER);
+
+            $package->setPaidByReceiver($paidByReceiver);
+
             $cod = new COD();
             $cod->setTotalAmount($totalAmount);
             $cod->setCodType(COD::COD_TYPE_POSTAL_ORDER);
