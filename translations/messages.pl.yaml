@@ -39,7 +39,8 @@ bitbag:
                 valid_credentials_first: 'Urząd nadania będzie dostępny po zapisaniu poprawnych danych do API'
                 select: 'Urząd nadania'
         package:
-            already_created: 'Paczka została utworzona'
+            already_created: 'Paczka została już utworzona'
             not_found: 'Paczka nie została znaleziona'
             created: 'Paczka została utworzona'
-            too_large: 'Paczka jest za duża (wysokość, szerokość lub głębokość nie może być większa niż 150cm)'
+            too_large: 'Paczka jest za duża (suma wysokości, szerokości i głębokości nie może być większa niż 250cm)'
+            depth_too_large: 'Paczka jest za duża (głębokość nie może być większa niż 120cm)'

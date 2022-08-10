@@ -54,7 +54,7 @@ final class PackageSizeResolver implements PackageSizeResolverInterface
         }
 
         if (PocztexPackageSizeEnum::MAX_DEPTH_2XL < $depth) {
-            throw new PackageSizeException('bitbag.shopware_poczta_polska_app.package.too_large');
+            throw new PackageSizeException('bitbag.shopware_poczta_polska_app.package.depth_too_large');
         }
 
         $packageDimensions = $depth + $height + $width;
