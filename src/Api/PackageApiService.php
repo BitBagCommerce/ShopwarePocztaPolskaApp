@@ -19,6 +19,7 @@ use BitBag\ShopwarePocztaPolskaApp\Exception\PackageException;
 use BitBag\ShopwarePocztaPolskaApp\Factory\Package\AddressFactoryInterface;
 use BitBag\ShopwarePocztaPolskaApp\Factory\Package\PackageFactoryInterface;
 use BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolverInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Vin\ShopwareSdk\Data\Context;
 use Vin\ShopwareSdk\Data\Entity\Order\OrderEntity;
 
@@ -28,7 +29,8 @@ final class PackageApiService implements PackageApiServiceInterface
         private AddressFactoryInterface $addressFactory,
         private PackageFactoryInterface $packageFactory,
         private ApiResolverInterface $apiResolver,
-        private DocumentApiServiceInterface $documentApiService
+        private DocumentApiServiceInterface $documentApiService,
+        private TranslatorInterface $translator
     ) {
     }
 
@@ -57,7 +59,7 @@ final class PackageApiService implements PackageApiServiceInterface
 
         $firstPackageResponse = $shipment->getAddDeliveryResponseItems()[0];
         if ([] !== $firstPackageResponse->getErrors()) {
-            throw new PackageException($firstPackageResponse->getErrors()[0]->getErrorDesc());
+            throw new PackageException($this->translator->trans($firstPackageResponse->getErrors()[0]->getErrorDesc(), [], 'api'));
         }
 
         $this->documentApiService->uploadOrderLabel(
