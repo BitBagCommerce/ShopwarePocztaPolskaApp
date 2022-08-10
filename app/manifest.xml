@@ -3,8 +3,8 @@
           xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/Framework/App/Manifest/Schema/manifest-1.0.xsd">
     <meta>
         <name>BitBagShopwarePocztaPolskaApp</name>
-        <label>Poczta Polska</label>
-        <label lang="pl-PL">Poczta Polska</label>
+        <label>Poczta Polska (courier)</label>
+        <label lang="pl-PL">Poczta Polska (kurier)</label>
         <description>BitBag Shopware app for Polish Post</description>
         <description lang="pl-PL">Aplikacja umożliwiająca tworzenie przesyłek z Pocztą Polską dla platformy Shopware</description>
         <author>BitBag</author>

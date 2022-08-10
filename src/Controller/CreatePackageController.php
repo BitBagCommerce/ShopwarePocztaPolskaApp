@@ -25,7 +25,7 @@ use Vin\ShopwareSdk\Repository\RepositoryInterface;
 
 final class CreatePackageController
 {
-    public const SHIPPING_KEY = 'Poczta Polska';
+    public const SHIPPING_KEY = 'Poczta Polska (Kurier)';
 
     public function __construct(
         private FeedbackResponseFactoryInterface $feedbackResponseFactory,
