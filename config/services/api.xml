@@ -7,6 +7,7 @@
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Factory\Package\PackageFactory" />
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Resolver\ApiResolver" />
             <argument type="service" id="BitBag\ShopwarePocztaPolskaApp\Api\DocumentApiService" />
+            <argument type="service" id="translator" />
         </service>
 
         <service id="BitBag\ShopwarePocztaPolskaApp\Api\DocumentApiService">
