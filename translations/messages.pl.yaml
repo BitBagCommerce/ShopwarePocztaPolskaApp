@@ -15,7 +15,7 @@ bitbag:
                 package_contents_invalid: 'Zawartość paczki w szczegółach paczki jest niepoprawna'
                 planned_shipping_date_invalid: 'Data nadania w szczegółach paczki jest niepoprawna'
             products:
-                too_heavy: 'Paczka jest za ciężka (maksymalnie 10 kg)'
+                too_heavy: 'Paczka jest za ciężka (maksymalnie 50 kg)'
                 null_weight: 'Paczka musi być cięższa niż 0.0 kg'
             address:
                 post_code_invalid: 'Kod pocztowy jest niepoprawny (poprawny format: 12-345)'

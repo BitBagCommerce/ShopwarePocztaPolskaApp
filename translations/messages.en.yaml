@@ -15,7 +15,7 @@ bitbag:
                 package_contents_invalid: 'Package details: is package contents invalid'
                 planned_shipping_date_invalid: 'Package details: shipping date is invalid'
             products:
-                too_heavy: 'Package is too heavy (maximum 10 kg)'
+                too_heavy: 'Package is too heavy (maximum 50 kg)'
                 null_weight: 'Package weight must be greater than 0.0 kg'
             address:
                 post_code_invalid: 'Post code is invalid (valid format is: 12-345)'
