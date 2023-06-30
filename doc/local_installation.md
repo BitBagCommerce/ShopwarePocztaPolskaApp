@@ -8,7 +8,7 @@
 ## Setting up Shopware Project
 1. First, we need to create a Shopware project using the command:
 ```bash
-$ composer create-project shopware/production BaseShopwareProject_6_5
+$ composer create-project shopware/production <your_shopware_project_name>
 ```
 
 
@@ -75,6 +75,6 @@ After completing the previous steps, we should be able to install our applicatio
    ```
 2.  Activate the app.
    ```bash
-     $ bin/console app:activate BitBagShopwarePocztaPolskaApp
+   $ bin/console app:activate BitBagShopwarePocztaPolskaApp
    ```
 Now, both applications should communicate properly. It is important to remember that both Shopware and the BitBagShopwarePocztaPolskaApp application need to be running on the server for communication between Shopware and the application to occur.
