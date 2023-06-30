@@ -53,6 +53,8 @@ We work on stable, supported and up-to-date versions of packages. We recommend y
 
 For the full installation guide please go to [installation](doc/installation.md).
 
+To proceed with the local installation for development or testing purposes, please go to [local installation](doc/local_installation.md).
+
 --- 
 
 # Configuration
